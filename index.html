@@ -1,0 +1,2962 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<script>try{var __t=localStorage.getItem("geny_ai_theme_v1");if(__t==="light"||__t==="dark")document.documentElement.setAttribute("data-theme",__t)}catch(e){}</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0A0A0D">
+<title>GENY AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+
+<style>
+  :root {
+    --bg: #0A0A0D;
+    --surface: #151318;
+    --surface-border: #242229;
+    --accent: #7C6FF0;
+    --accent-hover: #6A5DE0;
+    --user-bubble: #1E1B26;
+    --text-primary: #F3F3F5;
+    --text-secondary: #8F8D97;
+    --error: #FF7A7A;
+    --success: #3DDC97;
+    --sidebar-bg: #0D0C10;
+    --sidebar-item-active: #211E2E;
+    color-scheme: dark;
+    --strong: #ffffff;
+    --hover: rgba(255,255,255,0.06);
+    --input-bg: #1c1b20;
+    --input-border: #34323a;
+    --menu-bg: #1a1820;
+    --chip-hover: #1b1827;
+    --circle-bg: #2a2830;
+    --accent-text: #cfc9ff;
+    --code-bg: rgba(124,111,240,0.14);
+    --code-text: #c9c3ff;
+    --code-border: rgba(124,111,240,0.40);
+    --code-shadow: inset 0 1px 0 var(--hover), 0 2px 6px rgba(0,0,0,0.45), 0 0 0 1px rgba(0,0,0,0.25);
+    --shadow-pre: 0 4px 14px rgba(0,0,0,0.4);
+    --shadow-input: 0 2px 10px rgba(0,0,0,0.3);
+    --shadow-menu: 0 14px 40px rgba(0,0,0,.55);
+    --drop-bg: rgba(10,10,13,0.85);
+    --sidebar-fade: rgba(13,12,16,0);
+    --glow: rgba(124,111,240,0.22);
+    --hero-grad: linear-gradient(100deg, #ffffff 0%, #c9c3ff 35%, #7C6FF0 55%, #c9c3ff 75%, #ffffff 100%);
+  }
+  :root[data-theme="light"] {
+    --bg: #F6F7F9;
+    --accent: #6254EC;
+    --surface: #FFFFFF;
+    --surface-border: #E3E6EC;
+    --accent-hover: #5546DC;
+    --user-bubble: #E9ECF8;
+    --text-primary: #0F1115;
+    --text-secondary: #5D6471;
+    --error: #D93636;
+    --success: #1FA971;
+    --sidebar-bg: #EEF0F4;
+    --sidebar-item-active: #FFFFFF;
+    color-scheme: light;
+    --strong: #0B0D12;
+    --hover: rgba(15,17,30,0.055);
+    --input-bg: #FFFFFF;
+    --input-border: rgba(15,17,30,0.10);
+    --menu-bg: #FFFFFF;
+    --chip-hover: #F1F2FD;
+    --circle-bg: #E3E6EE;
+    --accent-text: #4A3FD6;
+    --code-bg: rgba(91,76,230,0.09);
+    --code-text: #4A3FD6;
+    --code-border: rgba(91,76,230,0.26);
+    --code-shadow: 0 1px 1px rgba(15,17,30,0.08);
+    --shadow-pre: 0 2px 10px rgba(15,17,30,0.06);
+    --shadow-input: 0 1px 2px rgba(15,17,30,0.05), 0 12px 32px rgba(15,17,30,0.08);
+    --shadow-menu: 0 18px 48px rgba(15,17,30,0.18);
+    --drop-bg: rgba(246,247,249,0.92);
+    --sidebar-fade: rgba(238,240,244,0);
+    --glow: rgba(124,111,240,0.15);
+    --hero-grad: linear-gradient(100deg, #0F1115 0%, #3b34c8 40%, #7a4df0 60%, #0F1115 100%);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: var(--bg); color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-tap-highlight-color: transparent; overscroll-behavior: none;
+  }
+  #app { display: flex; height: 100dvh; width: 100%; overflow: hidden; position: relative; }
+
+  #sidebar {
+    width: 260px; min-width: 260px; background: var(--sidebar-bg);
+    border-right: 1px solid var(--surface-border);
+    display: flex; flex-direction: column; padding: 0 10px 16px; overflow: hidden; position: relative;
+    transition: transform 0.25s ease, width .2s ease, min-width .2s ease, padding .2s ease; z-index: 50;
+  }
+  @media (min-width: 861px) {
+    #app.sb-collapsed #sidebar { width: 0; min-width: 0; padding: 0; border-right-width: 0; }
+  }
+  @media (max-width: 860px) {
+    #sidebar {
+      position: fixed; top: 0; left: 0; bottom: 0;
+      transform: translateX(-100%); box-shadow: 8px 0 24px rgba(0,0,0,0.5);
+    }
+    #sidebar.open { transform: translateX(0); }
+  }
+  #sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 40; }
+  #sidebar-overlay.show { display: block; }
+
+  .sb-top { display: flex; align-items: center; gap: 6px; height: 58px; flex-shrink: 0; margin-left: -2px; white-space: nowrap; }
+  .wordmark {
+    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+    font-size: 24px; font-weight: 600; letter-spacing: -0.01em; color: var(--strong); line-height: 1; user-select: none;
+    font-optical-sizing: auto; text-rendering: geometricPrecision;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  }
+  .new-chat-btn {
+    display: flex; align-items: center; gap: 10px; background: transparent; width: 100%;
+    color: var(--text-secondary); border: none; border-radius: 10px; padding: 7px 8px;
+    font-size: 14px; font-weight: 500; cursor: pointer; margin-bottom: 8px; font-family: inherit;
+    white-space: nowrap; transition: background .15s ease, color .15s ease;
+  }
+  .new-chat-btn:hover { background: var(--hover); color: var(--text-primary); }
+  .new-chat-btn .plus-circle {
+    width: 28px; height: 28px; border-radius: 50%; background: var(--circle-bg); color: var(--text-primary);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .new-chat-btn .plus-circle svg { width: 16px; height: 16px; }
+  #conv-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; padding-bottom: 70px; }
+  .conv-row {
+    display: flex; align-items: center; padding: 8px 10px; border-radius: 8px;
+    cursor: pointer; font-size: 12.5px; color: var(--text-primary); gap: 6px;
+  }
+  .conv-row:hover { background: var(--hover); }
+  .conv-row.active { background: var(--sidebar-item-active); }
+  .conv-row .title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .conv-row .del-btn {
+    background: none; border: none; color: var(--text-secondary); cursor: pointer;
+    font-size: 14px; padding: 2px 6px; border-radius: 6px; font-family: inherit;
+  }
+  .conv-row .del-btn:hover { background: var(--surface-border); }
+  .conv-empty-hint { color: var(--text-secondary); font-size: 11.5px; padding: 8px 10px; }
+
+  #main { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100%; }
+  #header {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 58px; padding: 0 16px; flex-shrink: 0;
+    background: linear-gradient(180deg, rgba(124,111,240,0.07) 0%, rgba(124,111,240,0) 100%), var(--bg);
+    border-bottom: 1px solid var(--surface-border);
+  }
+  .header-left { display: flex; align-items: center; gap: 8px; }
+  .icon-btn {
+    width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    background: transparent; border: 1px solid transparent; color: var(--text-secondary);
+    cursor: pointer; transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .icon-btn:hover { background: var(--hover); color: var(--text-primary); border-color: var(--surface-border); }
+  .icon-btn svg { width: 19px; height: 19px; }
+  #menu-toggle { display: none; margin-left: -6px; }
+  @media (max-width: 860px) { #menu-toggle { display: flex; } }
+
+  .header-brand { display: none; margin-left: 2px; }
+  @media (max-width: 860px) { .header-brand { display: block; } }
+  @media (min-width: 861px) {
+    #app.sb-collapsed #menu-toggle { display: flex; }
+    #app.sb-collapsed .header-brand { display: block; }
+  }
+
+  .avatar {
+    width: 34px; height: 34px; border-radius: 50%; overflow: hidden; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; background: var(--accent);
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+  #chat-scroll { flex: 1; overflow-y: auto; padding: 16px 14px; display: flex; flex-direction: column; }
+  #empty-state {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding-top: 40px;
+  }
+  #empty-state { position: relative; padding: 40px 16px; overflow: hidden; }
+  .hero-glow {
+    position: absolute; top: 50%; left: 50%; width: 420px; height: 420px;
+    transform: translate(-50%, -60%); pointer-events: none; z-index: 0;
+    background: radial-gradient(circle, var(--glow) 0%, rgba(124,111,240,0) 65%);
+    filter: blur(20px); opacity: 0;
+    animation: glowIn 1.6s ease 0.1s forwards, glowPulse 6s ease-in-out 1.8s infinite;
+  }
+  #empty-state .line1, #empty-state .line2, #empty-state .suggestions { position: relative; z-index: 1; }
+  #empty-state .line1 { font-size: 22px; font-weight: 500; color: var(--text-secondary); letter-spacing: -0.01em; }
+  #empty-state .line2 {
+    font-size: clamp(30px, 6vw, 40px); font-weight: 700; letter-spacing: -0.03em;
+    margin-top: 4px; line-height: 1.15;
+  }
+  #empty-state .line2 .w {
+    background: var(--hero-grad);
+    background-size: 250% 100%;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    animation: wordIn 0.8s cubic-bezier(.2,.7,.2,1) both, shimmer 5s linear 1.6s infinite;
+    animation-delay: calc(var(--i) * 0.12s), calc(1.6s + var(--i) * 0.12s);
+  }
+  #empty-state .w { display: inline-block; }
+  #empty-state .line1 .w {
+    animation: wordIn 0.8s cubic-bezier(.2,.7,.2,1) both;
+    animation-delay: calc(var(--i) * 0.12s);
+  }
+  .suggestions {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+    margin-top: 28px; max-width: 520px;
+  }
+  .chip {
+    background: var(--surface); color: var(--text-primary);
+    border: 1px solid var(--surface-border); border-radius: 999px;
+    padding: 9px 16px; font-size: 13px; font-family: inherit; cursor: pointer;
+    animation: chipIn 0.7s cubic-bezier(.2,.7,.2,1) both;
+    animation-delay: calc(var(--i) * 0.12s);
+    transition: border-color .2s ease, background .2s ease, transform .2s ease;
+  }
+  .chip:hover { border-color: var(--accent); background: var(--chip-hover); transform: translateY(-2px); }
+  .chip:active { transform: translateY(0) scale(0.98); }
+
+  @keyframes wordIn {
+    from { opacity: 0; transform: translateY(14px); filter: blur(8px); }
+    to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+  @keyframes chipIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes shimmer {
+    from { background-position: 100% 0; }
+    to   { background-position: -150% 0; }
+  }
+  @keyframes glowIn { to { opacity: 1; } }
+  @keyframes glowPulse {
+    0%, 100% { transform: translate(-50%, -60%) scale(1); }
+    50% { transform: translate(-50%, -60%) scale(1.12); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-glow { animation: glowIn 1.6s ease 0.1s forwards !important; }
+    #empty-state .line2 .w { animation: wordIn 0.8s cubic-bezier(.2,.7,.2,1) both !important; animation-delay: calc(var(--i) * 0.12s) !important; }
+  }
+
+  .msg-row { display: flex; margin: 6px 0; }
+  .msg-row.user { justify-content: flex-end; padding-left: 15%; }
+  .msg-row.ai { justify-content: flex-start; padding-right: 12%; min-width: 0; }
+
+  .bubble-user {
+    background: var(--user-bubble); border: 1px solid var(--surface-border);
+    border-radius: 20px; padding: 9px 14px; font-size: 13.5px; line-height: 1.5;
+    white-space: pre-wrap; word-break: break-word; user-select: text;
+  }
+
+  .text-ai {
+    font-size: 13.5px; line-height: 1.6; white-space: pre-wrap;
+    word-break: break-word; user-select: text; padding-top: 4px; min-width: 0;
+  }
+  .text-ai.error { color: var(--error); }
+  .text-ai.waiting { color: var(--accent); }
+
+  /* Khi đã render markdown thì dùng khoảng trắng bình thường */
+  .text-ai.rendered { white-space: normal; }
+  .text-ai.rendered > :first-child { margin-top: 0; }
+  .text-ai.rendered > :last-child { margin-bottom: 0; }
+  .text-ai.rendered p { margin: 0 0 10px; }
+  .text-ai.rendered strong, .text-ai.rendered b { color: var(--strong); font-weight: 700; }
+  .text-ai.rendered em { font-style: italic; }
+  .text-ai.rendered h1, .text-ai.rendered h2, .text-ai.rendered h3, .text-ai.rendered h4 {
+    margin: 14px 0 6px; line-height: 1.3; font-weight: 700; color: var(--strong);
+  }
+  .text-ai.rendered h1 { font-size: 18px; }
+  .text-ai.rendered h2 { font-size: 16px; }
+  .text-ai.rendered h3, .text-ai.rendered h4 { font-size: 14.5px; }
+  .text-ai.rendered ul, .text-ai.rendered ol { margin: 4px 0 10px; padding-left: 22px; }
+  .text-ai.rendered li { margin-bottom: 4px; }
+  .text-ai.rendered hr { border: none; border-top: 1px solid var(--surface-border); margin: 12px 0; }
+  .text-ai.rendered code {
+    background: var(--code-bg); color: var(--code-text);
+    border: 1px solid var(--code-border); border-radius: 7px;
+    padding: 2px 7px; margin: 0 1px; font-size: 12.5px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    box-shadow: var(--code-shadow);
+  }
+  .text-ai.rendered pre {
+    background: var(--surface); border: 1px solid var(--surface-border);
+    border-radius: 10px; padding: 10px 12px; overflow-x: auto; margin: 8px 0;
+    box-shadow: var(--shadow-pre);
+  }
+  .text-ai.rendered pre code { background: none; color: var(--text-primary); border: none; border-radius: 0; padding: 0; margin: 0; box-shadow: none; white-space: pre; }
+  .text-ai.rendered a { color: var(--accent); }
+  .text-ai.rendered blockquote {
+    border-left: 3px solid var(--surface-border); margin: 8px 0;
+    padding-left: 10px; color: var(--text-secondary);
+  }
+  .text-ai.rendered table { border-collapse: collapse; margin: 8px 0; font-size: 12.5px; display: block; overflow-x: auto; }
+  .text-ai.rendered th, .text-ai.rendered td { border: 1px solid var(--surface-border); padding: 4px 8px; }
+  .text-ai.rendered th { background: var(--surface); }
+  .text-ai.rendered .katex { font-size: 1.05em; }
+  .text-ai.rendered .katex-display { overflow-x: auto; overflow-y: hidden; }
+
+  .ai-image { max-width: 300px; border-radius: 14px; display: block; margin-top: 4px; }
+
+  #input-bar { padding: 10px 14px 16px; flex-shrink: 0; }
+  #input-shell {
+    display: flex; align-items: center; background: var(--input-bg);
+    border: 1px solid var(--input-border); border-radius: 16px; min-height: 52px;
+    padding: 6px 8px 6px 8px; transition: border-color 0.15s ease;
+    box-shadow: var(--shadow-input);
+  }
+  #input-shell.focused { border-color: var(--accent); }
+  #text-input {
+    flex: 1; background: transparent; border: none; outline: none;
+    color: var(--text-primary); font-size: 14px; font-family: inherit; padding: 10px 8px;
+  }
+  #text-input::placeholder { color: var(--text-secondary); }
+  #send-btn {
+    width: 36px; height: 36px; border-radius: 10px; background: transparent;
+    border: none; color: var(--text-secondary); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  #send-btn svg { width: 19px; height: 19px; }
+  #send-btn:disabled { opacity: 0.4; cursor: default; }
+  #send-btn:not(:disabled):hover { background: var(--hover); color: var(--text-primary); }
+  #input-shell:has(#text-input:not(:placeholder-shown)) #send-btn:not(:disabled) { color: var(--accent-text); }
+
+  /* ---------- Đính kèm ---------- */
+  #attach-strip { display: none; flex-wrap: wrap; gap: 8px; padding: 0 6px 10px; }
+  #attach-strip.show { display: flex; }
+  .att-item {
+    position: relative; display: flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--surface-border);
+    border-radius: 12px; padding: 4px; max-width: 220px;
+    animation: chipIn .25s ease both;
+  }
+  .att-item img { width: 44px; height: 44px; object-fit: cover; border-radius: 9px; display: block; }
+  .att-item .att-ico { width: 44px; height: 44px; border-radius: 9px; background: var(--chip-hover); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .att-item .att-name { font-size: 12px; color: var(--text-primary); padding-right: 22px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 130px; }
+  .att-item .att-meta { font-size: 10.5px; color: var(--text-secondary); }
+  .att-item .att-x {
+    position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; border-radius: 50%;
+    background: #2a2733; color: #fff; border: 1px solid var(--surface-border);
+    font-size: 12px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;
+  }
+  .att-item .att-x:hover { background: var(--error); }
+  .att-item.loading .att-ico { animation: glowPulse2 1s ease-in-out infinite; }
+  @keyframes glowPulse2 { 50% { opacity: .4; } }
+  #attach-btn {
+    width: 36px; height: 36px; border-radius: 50%; background: transparent; border: none;
+    color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-left: 0; transition: color .15s ease, background .15s ease;
+  }
+  #attach-btn:hover { color: var(--text-primary); background: var(--hover); }
+  #attach-btn svg { width: 22px; height: 22px; }
+  .bubble-user .b-atts { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+  .bubble-user .b-atts img { max-width: 180px; max-height: 180px; border-radius: 12px; display: block; }
+  .bubble-user .b-file {
+    display: inline-flex; align-items: center; gap: 6px; background: var(--hover);
+    border-radius: 10px; padding: 5px 10px; font-size: 12px; max-width: 220px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  #drop-overlay {
+    display: none; position: absolute; inset: 0; z-index: 80; background: var(--drop-bg);
+    border: 2px dashed var(--accent); border-radius: 18px; margin: 10px;
+    align-items: center; justify-content: center; font-size: 16px; font-weight: 600;
+    color: var(--strong); pointer-events: none;
+  }
+  #drop-overlay.show { display: flex; }
+  #toast {
+    position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%) translateY(10px);
+    background: #2a2733; color: #fff; border: 1px solid var(--surface-border);
+    padding: 9px 16px; border-radius: 12px; font-size: 13px; opacity: 0; pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease; z-index: 100; max-width: 90vw; text-align: center;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ---------- Gói ---------- */
+  .plan-badge {
+    display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .04em;
+    padding: 2px 8px; border-radius: 999px; margin-left: 8px; vertical-align: middle;
+    background: var(--surface); color: var(--text-secondary); border: 1px solid var(--surface-border);
+  }
+  .plan-badge.plus { background: linear-gradient(100deg, #7C6FF0, #a78bfa); color: #fff; border-color: transparent; }
+  .header-right { display: flex; align-items: center; gap: 8px; }
+  #upgrade-btn {
+    height: 32px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--accent);
+    background: rgba(124,111,240,0.12); color: var(--accent-text); font-size: 12.5px; font-weight: 600;
+    font-family: inherit; cursor: pointer; transition: background .15s ease;
+  }
+  #upgrade-btn:hover { background: rgba(124,111,240,0.25); }
+  #plan-modal {
+    display: none; position: fixed; inset: 0; z-index: 120; background: rgba(0,0,0,0.6);
+    align-items: center; justify-content: center; padding: 16px;
+  }
+  #plan-modal.show { display: flex; }
+  .plan-card {
+    width: 100%; max-width: 420px; background: var(--surface); border: 1px solid var(--surface-border);
+    border-radius: 18px; padding: 22px; animation: chipIn .25s ease both;
+  }
+  .plan-card h3 { margin: 0 0 4px; font-size: 18px; }
+  .plan-card .sub { color: var(--text-secondary); font-size: 13px; margin-bottom: 14px; }
+  .plan-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 16px; }
+  .plan-table th, .plan-table td { border-bottom: 1px solid var(--surface-border); padding: 6px 4px; text-align: center; }
+  .plan-table th:first-child, .plan-table td:first-child { text-align: left; color: var(--text-secondary); }
+  .plan-table td.cur, .plan-table th.cur { color: var(--strong); font-weight: 700; }
+  .plan-card input {
+    width: 100%; background: var(--bg); border: 1px solid var(--surface-border); border-radius: 12px;
+    padding: 11px 14px; color: var(--text-primary); font-size: 14px; font-family: inherit; outline: none;
+    text-transform: uppercase; letter-spacing: .05em;
+  }
+  .plan-card input:focus { border-color: var(--accent); }
+  .plan-msg { min-height: 18px; font-size: 12.5px; margin: 8px 0 12px; }
+  .plan-msg.err { color: var(--error); }
+  .plan-msg.ok { color: var(--success); }
+  .plan-actions { display: flex; gap: 8px; justify-content: flex-end; }
+  .plan-actions button {
+    padding: 9px 16px; border-radius: 10px; font-size: 13px; font-family: inherit; cursor: pointer;
+    border: 1px solid var(--surface-border); background: transparent; color: var(--text-primary);
+  }
+  .plan-actions button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  .plan-actions button:disabled { opacity: .5; cursor: default; }
+
+  /* ---------- Bộ chọn gói trong thanh chat ---------- */
+  #input-bar { position: relative; }
+  #plan-pill {
+    display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px 0 12px;
+    margin-right: 6px; border-radius: 999px; border: 1px solid transparent; background: transparent;
+    color: var(--text-secondary); font-size: 12.5px; font-weight: 600; font-family: inherit;
+    cursor: pointer; flex-shrink: 0; transition: background .15s ease, color .15s ease;
+  }
+  #plan-pill:hover, #plan-pill.open { background: var(--hover); color: var(--text-primary); }
+  #plan-pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-secondary); }
+  #plan-pill.plus { color: var(--accent-text); }
+  #plan-pill.plus .dot { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  #plan-pill .caret { width: 12px; height: 12px; opacity: .7; transition: transform .2s ease; }
+  #plan-pill.open .caret { transform: rotate(180deg); }
+  #plan-menu {
+    position: absolute; right: 20px; bottom: calc(100% - 6px); width: 280px; z-index: 60;
+    background: var(--menu-bg); border: 1px solid var(--surface-border); border-radius: 16px; padding: 6px;
+    box-shadow: var(--shadow-menu);
+    opacity: 0; transform: translateY(8px) scale(.98); transform-origin: bottom right;
+    pointer-events: none; transition: opacity .16s ease, transform .16s ease;
+  }
+  #plan-menu.show { opacity: 1; transform: none; pointer-events: auto; }
+  .plan-opt {
+    display: flex; align-items: flex-start; gap: 10px; width: 100%; text-align: left;
+    padding: 10px 12px; border-radius: 11px; border: none; background: transparent;
+    color: var(--text-primary); font-family: inherit; cursor: pointer;
+  }
+  .plan-opt:hover { background: var(--hover); }
+  .plan-opt .po-body { flex: 1; min-width: 0; }
+  .plan-opt .po-name { font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+  .plan-opt .po-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; line-height: 1.4; }
+  .plan-opt .po-tag {
+    font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 999px;
+    background: linear-gradient(100deg, #7C6FF0, #a78bfa); color: #fff;
+  }
+  .plan-opt .po-check { width: 16px; height: 16px; color: var(--accent); opacity: 0; margin-top: 2px; flex-shrink: 0; }
+  .plan-opt.sel .po-check { opacity: 1; }
+  .plan-opt .po-lock { font-size: 12px; margin-top: 1px; opacity: .8; }
+
+  #plus-menu {
+    position: absolute; left: 20px; bottom: calc(100% - 6px); width: 250px; z-index: 60;
+    background: var(--menu-bg); border: 1px solid var(--surface-border); border-radius: 14px; padding: 6px;
+    box-shadow: var(--shadow-menu);
+    opacity: 0; transform: translateY(8px) scale(.98); transform-origin: bottom left;
+    pointer-events: none; transition: opacity .16s ease, transform .16s ease;
+  }
+  #plus-menu.show { opacity: 1; transform: none; pointer-events: auto; }
+  .plus-opt {
+    display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
+    padding: 10px 12px; border-radius: 10px; border: none; background: transparent;
+    color: var(--text-primary); font-family: inherit; font-size: 13.5px; cursor: pointer;
+  }
+  .plus-opt:hover { background: var(--hover); }
+  .plus-opt svg { width: 18px; height: 18px; color: var(--text-secondary); flex-shrink: 0; }
+
+  /* ---------- Chân thanh bên: nút cài đặt nổi trên danh sách lịch sử ---------- */
+  .sb-footer {
+    position: absolute; left: 0; right: 0; bottom: 0; padding: 30px 10px 12px; z-index: 5;
+    background: linear-gradient(to top, var(--sidebar-bg) 58%, var(--sidebar-fade) 100%);
+    pointer-events: none;
+  }
+  .settings-row {
+    pointer-events: auto; display: flex; align-items: center; gap: 10px; width: 100%;
+    padding: 9px 10px; border-radius: 10px; border: none; background: transparent;
+    color: var(--text-secondary); font-family: inherit; font-size: 14px; font-weight: 500;
+    cursor: pointer; white-space: nowrap; transition: background .15s ease, color .15s ease;
+  }
+  .settings-row:hover { background: var(--hover); color: var(--text-primary); }
+  .settings-row svg { width: 19px; height: 19px; flex-shrink: 0; transition: transform .35s ease; }
+  .settings-row:hover svg { transform: rotate(45deg); }
+
+  /* ---------- Cửa sổ cài đặt ---------- */
+  #settings-modal {
+    display: none; position: fixed; inset: 0; z-index: 130; background: rgba(0,0,0,0.6);
+    align-items: center; justify-content: center; padding: 16px;
+  }
+  #settings-modal.show { display: flex; }
+  .settings-card {
+    width: 100%; max-width: 440px; background: var(--surface); border: 1px solid var(--surface-border);
+    border-radius: 18px; padding: 18px 20px 22px; animation: chipIn .25s ease both;
+  }
+  .settings-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .settings-head h3 { margin: 0; font-size: 18px; }
+  .settings-label { font-size: 13.5px; font-weight: 600; margin-bottom: 3px; }
+  .settings-desc { font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.5; }
+  .lang-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .lang-opt {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 11px 13px;
+    border-radius: 11px; border: 1px solid var(--surface-border); background: transparent;
+    color: var(--text-primary); font-family: inherit; font-size: 13.5px; cursor: pointer; text-align: left;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .lang-opt:hover { background: var(--hover); }
+  .lang-opt.sel { border-color: var(--accent); background: rgba(124,111,240,0.13); }
+  .lang-opt svg { width: 15px; height: 15px; color: var(--accent); opacity: 0; flex-shrink: 0; }
+  .lang-opt.sel svg { opacity: 1; }
+  .settings-label.mt { margin-top: 24px; }
+  .theme-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .theme-opt {
+    display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 11px;
+    border: 1px solid var(--surface-border); background: transparent; color: var(--text-primary);
+    font-family: inherit; font-size: 13.5px; cursor: pointer; text-align: left;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .theme-opt:hover { background: var(--hover); }
+  .theme-opt.sel { border-color: var(--accent); background: rgba(124,111,240,0.13); }
+  .theme-opt svg { width: 18px; height: 18px; flex-shrink: 0; color: var(--text-secondary); }
+  .theme-opt.sel svg { color: var(--accent); }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-thumb { background: var(--surface-border); border-radius: 4px; }
+
+  /* ============================================================
+     GIAO DIỆN SÁNG — trắng lạnh sắc nét (Apple/Linear), lưới chấm, kính mờ
+     ============================================================ */
+  :root[data-theme="light"] {
+    --glass: rgba(255,255,255,0.66);
+    --glass-strong: rgba(255,255,255,0.84);
+    --glass-border: rgba(15,17,30,0.09);
+    --glass-hi: inset 0 1px 0 rgba(255,255,255,0.95);
+  }
+
+  /* nền: màu lạnh rất nhạt + lưới chấm mờ dần ra mép */
+  :root[data-theme="light"] #main {
+    position: relative; isolation: isolate;
+    background:
+      radial-gradient(900px 480px at 8% -6%, rgba(99,102,241,0.075), transparent 62%),
+      radial-gradient(800px 460px at 96% 104%, rgba(56,189,248,0.07), transparent 60%),
+      var(--bg);
+  }
+  :root[data-theme="light"] #main::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background-image: radial-gradient(circle, rgba(20,24,40,0.20) 1px, transparent 1.35px);
+    background-size: 24px 24px;
+    -webkit-mask-image: radial-gradient(ellipse 78% 68% at 50% 44%, #000 0%, rgba(0,0,0,0.6) 52%, transparent 100%);
+    mask-image: radial-gradient(ellipse 78% 68% at 50% 44%, #000 0%, rgba(0,0,0,0.6) 52%, transparent 100%);
+  }
+  :root[data-theme="light"] #sidebar { border-right: 1px solid rgba(15,17,30,0.07); }
+
+  /* thanh đầu: kính mờ */
+  :root[data-theme="light"] #header {
+    background: rgba(255,255,255,0.58);
+    -webkit-backdrop-filter: blur(16px) saturate(170%); backdrop-filter: blur(16px) saturate(170%);
+    border-bottom: 1px solid rgba(15,17,30,0.07);
+  }
+  :root[data-theme="light"] .icon-btn:hover { background: var(--glass-strong); border-color: var(--glass-border); box-shadow: var(--glass-hi), 0 1px 3px rgba(15,17,30,0.08); }
+
+  /* thanh bên: sắc nét */
+  :root[data-theme="light"] .new-chat-btn { color: var(--text-primary); }
+  :root[data-theme="light"] .new-chat-btn:hover { background: rgba(255,255,255,0.8); }
+  :root[data-theme="light"] .new-chat-btn .plus-circle { background: #14161C; color: #fff; box-shadow: 0 2px 6px rgba(15,17,30,0.28); }
+  :root[data-theme="light"] .conv-row:hover { background: rgba(255,255,255,0.65); }
+  :root[data-theme="light"] .conv-row.active {
+    background: var(--glass-strong); box-shadow: var(--glass-hi), 0 1px 2px rgba(15,17,30,0.07), 0 0 0 1px rgba(15,17,30,0.06);
+  }
+  :root[data-theme="light"] .settings-row:hover { background: rgba(255,255,255,0.8); }
+
+  /* trang chào: vùng sáng sạch sau chữ để lưới chấm không đè lên */
+  :root[data-theme="light"] .hero-glow {
+    width: 620px; height: 330px; filter: none; transform: translate(-50%, -56%);
+    background: radial-gradient(closest-side, rgba(246,247,249,0.97) 0%, rgba(246,247,249,0.88) 55%, rgba(246,247,249,0) 100%);
+  }
+  :root[data-theme="light"] #empty-state .line1 { color: #6b7280; }
+  :root[data-theme="light"] .chip {
+    background: var(--glass); color: #14161C; border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: blur(14px) saturate(170%); backdrop-filter: blur(14px) saturate(170%);
+    box-shadow: var(--glass-hi), 0 1px 2px rgba(15,17,30,0.05), 0 8px 20px rgba(15,17,30,0.06);
+  }
+  :root[data-theme="light"] .chip:hover {
+    background: rgba(255,255,255,0.95); border-color: rgba(98,84,236,0.55);
+    box-shadow: var(--glass-hi), 0 2px 4px rgba(98,84,236,0.10), 0 14px 30px rgba(98,84,236,0.16);
+  }
+
+  /* tin nhắn */
+  :root[data-theme="light"] .bubble-user { background: #E9ECF8; border-color: #D9DEF0; color: #0F1115; }
+  :root[data-theme="light"] .text-ai.rendered pre { background: #F4F6FA; border-color: #E1E5EE; }
+  :root[data-theme="light"] .text-ai.rendered th { background: #F1F3F8; }
+  :root[data-theme="light"] .text-ai.rendered blockquote { border-left-color: #c9cdf2; }
+
+  /* ô nhập: kính mờ */
+  :root[data-theme="light"] #input-shell {
+    background: var(--glass); border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: blur(18px) saturate(180%); backdrop-filter: blur(18px) saturate(180%);
+    box-shadow: var(--glass-hi), var(--shadow-input);
+  }
+  :root[data-theme="light"] #input-shell.focused {
+    background: var(--glass-strong); border-color: rgba(98,84,236,0.7);
+    box-shadow: var(--glass-hi), 0 0 0 4px rgba(98,84,236,0.14), 0 12px 32px rgba(15,17,30,0.09);
+  }
+  :root[data-theme="light"] #input-shell:has(#text-input:not(:placeholder-shown)) #send-btn:not(:disabled) {
+    background: linear-gradient(180deg, #7468f4, #5546e0); color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.28), 0 3px 10px rgba(85,70,224,0.38);
+  }
+  :root[data-theme="light"] #input-shell:has(#text-input:not(:placeholder-shown)) #send-btn:not(:disabled):hover { filter: brightness(1.07); }
+  :root[data-theme="light"] .att-item { background: var(--glass-strong); border-color: var(--glass-border); box-shadow: var(--glass-hi), 0 1px 3px rgba(15,17,30,0.08); }
+
+  /* menu nổi và cửa sổ: kính mờ */
+  :root[data-theme="light"] #plan-menu, :root[data-theme="light"] #plus-menu {
+    background: rgba(255,255,255,0.80); border-color: var(--glass-border);
+    -webkit-backdrop-filter: blur(22px) saturate(180%); backdrop-filter: blur(22px) saturate(180%);
+    box-shadow: var(--glass-hi), var(--shadow-menu);
+  }
+  :root[data-theme="light"] #plan-modal, :root[data-theme="light"] #settings-modal {
+    background: rgba(15,17,30,0.28);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  }
+  :root[data-theme="light"] #sidebar-overlay { background: rgba(15,17,30,0.28); }
+  :root[data-theme="light"] .plan-card, :root[data-theme="light"] .settings-card {
+    background: rgba(255,255,255,0.88); border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: blur(28px) saturate(180%); backdrop-filter: blur(28px) saturate(180%);
+    box-shadow: var(--glass-hi), 0 28px 70px rgba(15,17,30,0.24);
+  }
+  :root[data-theme="light"] .lang-opt, :root[data-theme="light"] .theme-opt { background: rgba(255,255,255,0.6); border-color: var(--glass-border); }
+  :root[data-theme="light"] .lang-opt:hover, :root[data-theme="light"] .theme-opt:hover { background: #fff; }
+  :root[data-theme="light"] .lang-opt.sel, :root[data-theme="light"] .theme-opt.sel { background: rgba(98,84,236,0.09); border-color: rgba(98,84,236,0.7); }
+  :root[data-theme="light"] .plan-card input { background: rgba(255,255,255,0.8); }
+  :root[data-theme="light"] ::-webkit-scrollbar-thumb { background: #cfd4de; }
+
+  /* tiêu đề sắc nét: mực đen đặc */
+  :root[data-theme="light"] #empty-state .line2 .w {
+    background: none; -webkit-background-clip: border-box; background-clip: border-box;
+    -webkit-text-fill-color: var(--strong); color: var(--strong);
+    animation: wordIn 0.8s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--i) * 0.12s);
+  }
+  :root[data-theme="light"] #main::before { background-image: radial-gradient(circle, rgba(20,24,40,0.26) 1px, transparent 1.4px); }
+
+  /* ---- Lưới chấm tương tác (giao diện sáng) ---- */
+  #dot-field { display: none; position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+  :root[data-theme="light"] #dot-field { display: block; -webkit-mask-image: radial-gradient(ellipse 78% 68% at 50% 44%, #000 0%, rgba(0,0,0,0.6) 52%, transparent 100%); mask-image: radial-gradient(ellipse 78% 68% at 50% 44%, #000 0%, rgba(0,0,0,0.6) 52%, transparent 100%); }
+  :root.dots-live[data-theme="light"] #main::before { display: none; }
+
+  /* ---- Khung xem trước code web (chia đôi màn hình) ---- */
+  #pv-panel { display: none; order: 3; flex: 0 0 clamp(380px, 46%, 760px); min-width: 0; height: 100%; flex-direction: column;
+    background: var(--surface); border-left: 1px solid var(--surface-border); z-index: 30; }
+  #app.pv-on #pv-panel { display: flex; }
+  #app.pv-on #main { min-width: 340px; }
+  .pv-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; height: 58px; padding: 0 10px 0 14px;
+    border-bottom: 1px solid var(--surface-border); flex-shrink: 0; }
+  .pv-tabs { display: flex; gap: 2px; padding: 3px; background: var(--bg); border: 1px solid var(--surface-border); border-radius: 10px; }
+  .pv-tab { border: none; background: transparent; color: var(--text-secondary); font-family: inherit; font-size: 12.5px; font-weight: 600;
+    padding: 6px 14px; border-radius: 7px; cursor: pointer; }
+  .pv-tab.sel { background: var(--surface); color: var(--strong); box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
+  .pv-actions { display: flex; gap: 2px; }
+  .pv-body { flex: 1; min-height: 0; position: relative; background: #fff; }
+  #pv-frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #fff; }
+  #pv-code { position: absolute; inset: 0; margin: 0; padding: 14px; overflow: auto; background: var(--bg); color: var(--text-primary);
+    font: 12.5px/1.6 Consolas, Monaco, monospace; white-space: pre; tab-size: 2; }
+  #pv-code[hidden] { display: none; }
+  .pv-wrap { position: relative; }
+  .pv-run { position: absolute; top: 14px; right: 8px; z-index: 2; border: 1px solid var(--surface-border); background: var(--surface);
+    color: var(--accent-text); font-family: inherit; font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 8px; cursor: pointer; }
+  .pv-run:hover { border-color: var(--accent); background: var(--chip-hover); }
+  @media (max-width: 860px) { #pv-panel { position: fixed; inset: 0; z-index: 90; flex: none; width: 100%; } }
+
+  /* ---- Thẻ hành động (chỉ trong app desktop) ---- */
+  .ga-card { margin: 8px 0; padding: 12px 14px; border: 1px solid var(--surface-border); border-radius: 12px; background: var(--surface); }
+  .ga-title { font-size: 13px; font-weight: 600; color: var(--strong); }
+  .ga-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; word-break: break-all; }
+  .ga-run { margin-top: 10px; border: 1px solid var(--accent); background: rgba(124,111,240,0.14); color: var(--accent-text);
+    font-family: inherit; font-size: 12.5px; font-weight: 600; padding: 7px 14px; border-radius: 9px; cursor: pointer; }
+  .ga-run:disabled { opacity: .5; cursor: default; }
+  .ga-out { margin-top: 8px; font-size: 12px; color: var(--text-secondary); white-space: pre-wrap; }
+
+  /* ---- Hiệu ứng chờ: nguyên tử ---- */
+  .text-ai.waiting { display: flex; align-items: center; gap: 10px; white-space: normal; color: var(--text-secondary); padding-top: 0; }
+  .th-atom { width: 38px; height: 38px; flex: none; }
+  :root:not([data-theme="light"]) .th-atom { filter: drop-shadow(0 0 5px rgba(124,111,240,0.5)); }
+  .th-text { font-size: 13px; }
+
+  /* ---- Tải app desktop ---- */
+  #dl-btn[hidden] { display: none; }
+  #dl-btn:hover svg { transform: translateY(2px); }
+  #conv-list { padding-bottom: 116px; }
+  #dl-modal { display: none; position: fixed; inset: 0; z-index: 130; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; padding: 16px; }
+  #dl-modal.show { display: flex; }
+  :root[data-theme="light"] #dl-modal { background: rgba(15,17,30,0.28); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .dl-go { display: block; text-align: center; text-decoration: none; margin: 4px 0 14px; padding: 11px 16px; border-radius: 11px;
+    background: var(--accent); color: #fff; font-size: 14px; font-weight: 600; }
+  .dl-go:hover { background: var(--accent-hover); }
+  .dl-note { margin-bottom: 0; }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div id="drop-overlay" data-i18n="drop">Thả ảnh hoặc tệp vào đây</div>
+  <div id="settings-modal" role="dialog" aria-modal="true">
+    <div class="settings-card">
+      <div class="settings-head">
+        <h3 data-i18n="settings.label">Cài đặt</h3>
+        <button id="settings-close" class="icon-btn" type="button" data-i18n-title="common.close" title="Đóng" aria-label="Đóng">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <div class="settings-label" data-i18n="settings.language">Ngôn ngữ</div>
+      <div class="settings-desc" data-i18n="settings.langDesc"></div>
+      <div id="lang-list" class="lang-list"></div>
+      <div class="settings-label mt" data-i18n="settings.theme">Giao diện</div>
+      <div class="settings-desc" data-i18n="settings.themeDesc"></div>
+      <div class="theme-list">
+        <button class="theme-opt" type="button" data-theme-val="light">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <span data-i18n="theme.light">Sáng</span>
+        </button>
+        <button class="theme-opt" type="button" data-theme-val="dark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <span data-i18n="theme.dark">Tối</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="dl-modal" role="dialog" aria-modal="true">
+    <div class="settings-card">
+      <div class="settings-head">
+        <h3 data-i18n="dl.title">Geny cho Windows</h3>
+        <button id="dl-close" class="icon-btn" type="button" data-i18n-title="common.close" title="Đóng" aria-label="Đóng">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <div class="settings-desc" data-i18n="dl.desc"></div>
+      <a id="dl-link" class="dl-go" href="#" rel="noopener" data-i18n="dl.go">Tải về cho Windows</a>
+      <div class="settings-desc dl-note" data-i18n="dl.note"></div>
+    </div>
+  </div>
+  <div id="toast"></div>
+  <div id="sidebar-overlay"></div>
+
+  <div id="sidebar">
+    <div class="sb-top">
+      <button id="sb-toggle" class="icon-btn" type="button" aria-label="Thu gọn thanh bên" title="Thu gọn thanh bên" data-i18n-title="sidebar.collapse">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><path d="M9.5 4.5v15"/></svg>
+      </button>
+      <div class="wordmark">Geny</div>
+    </div>
+    <button class="new-chat-btn" id="new-chat-btn" type="button">
+      <span class="plus-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
+      <span data-i18n="sidebar.new">Cuộc trò chuyện mới</span>
+    </button>
+    <div id="conv-list"></div>
+    <div class="sb-footer">
+      <button id="dl-btn" class="settings-row" type="button" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>
+        <span data-i18n="dl.btn">Tải app cho Windows</span>
+      </button>
+      <button id="settings-btn" class="settings-row" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span data-i18n="settings.label">Cài đặt</span>
+      </button>
+    </div>
+  </div>
+
+    <aside id="pv-panel" aria-label="Preview">
+    <div class="pv-head">
+      <div class="pv-tabs">
+        <button id="pv-tab-view" class="pv-tab sel" data-tab="view" type="button">Preview</button>
+        <button id="pv-tab-code" class="pv-tab" data-tab="code" type="button">Code</button>
+      </div>
+      <div class="pv-actions">
+        <button id="pv-reload" class="icon-btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button>
+        <button id="pv-copy" class="icon-btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></svg></button>
+        <button id="pv-download" class="icon-btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg></button>
+        <button id="pv-close" class="icon-btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+    </div>
+    <div class="pv-body">
+      <iframe id="pv-frame" title="preview" sandbox="allow-scripts allow-forms allow-modals allow-popups allow-pointer-lock" referrerpolicy="no-referrer"></iframe>
+      <pre id="pv-code" hidden><code></code></pre>
+    </div>
+  </aside>
+  
+  <div id="main">
+    <canvas id="dot-field" aria-hidden="true"></canvas>
+    <div id="header">
+      <div class="header-left">
+        <button id="menu-toggle" class="icon-btn" type="button" aria-label="Mở thanh bên" title="Mở thanh bên" data-i18n-title="sidebar.open">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><path d="M9.5 4.5v15"/></svg>
+        </button>
+        <div class="wordmark header-brand">Geny</div>
+      </div>
+    </div>
+
+    <div id="chat-scroll">
+      <div id="empty-state">
+        <div class="hero-glow"></div>
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="suggestions">
+          <button class="chip" data-i18n="chip.explain" data-i18n-prompt="chip.explain.p">Giải thích một khái niệm</button>
+          <button class="chip" data-i18n="chip.email" data-i18n-prompt="chip.email.p">Viết email</button>
+          <button class="chip" data-i18n="chip.image" data-i18n-prompt="chip.image.p">Vẽ một bức ảnh</button>
+          <button class="chip" data-i18n="chip.study" data-i18n-prompt="chip.study.p">Lên kế hoạch học tập</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="input-bar">
+      <div id="plus-menu" role="menu">
+        <button class="plus-opt" id="opt-files" type="button" role="menuitem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+          <span data-i18n="plus.files">Đính kèm ảnh hoặc tệp</span>
+        </button>
+        <button class="plus-opt" id="opt-folder" type="button" role="menuitem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <span data-i18n="plus.folder">Nạp cả thư mục</span>
+        </button>
+      </div>
+      <div id="attach-strip"></div>
+      <div id="input-shell">
+        <button id="attach-btn" type="button" title="Thêm tệp hoặc thư mục" aria-label="Thêm" data-i18n-title="plus.title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <input id="file-input" type="file" multiple hidden accept="image/*,.txt,.md,.csv,.json,.xml,.html,.css,.js,.ts,.jsx,.tsx,.py,.java,.c,.cpp,.cs,.go,.rs,.php,.rb,.sql,.sh,.yml,.yaml,.log,.pdf,.docx">
+        <input id="folder-input" type="file" webkitdirectory multiple hidden>
+        <input id="text-input" type="text" placeholder="Nhắn cho Geny…" data-i18n-ph="input.ph" autocomplete="off">
+        <div id="plan-pill" class="plus" style="pointer-events:none"><span class="dot"></span><span>GN1.0</span></div>
+        <button id="send-btn" type="button" aria-label="Gửi" data-i18n-title="send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4v7a4 4 0 0 1-4 4H4"/><path d="m9 10-5 5 5 5"/></svg></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FIREBASE ANALYTICS -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-analytics.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCr84CLCjGkWNMOMo_T1vksVWQ147IHGRQ",
+    authDomain: "geny-ai-e88e3.firebaseapp.com",
+    projectId: "geny-ai-e88e3",
+    storageBucket: "geny-ai-e88e3.firebasestorage.app",
+    messagingSenderId: "966065800541",
+    appId: "1:966065800541:web:3993bf325581a0fa8c54b4",
+    measurementId: "G-3T296PW2VV"
+  };
+
+  try {
+    const firebaseApp = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(firebaseApp);
+    window.genyAnalytics = {
+      log: (eventName, params) => {
+        try { logEvent(analytics, eventName, params || {}); }
+        catch (e) { console.warn("Analytics log lỗi:", e); }
+      }
+    };
+  } catch (e) {
+    console.warn("Không khởi tạo được Firebase Analytics:", e);
+    window.genyAnalytics = { log: () => {} };
+  }
+</script>
+
+<script>
+"use strict";
+
+// ============================================================
+// CẤU HÌNH
+// ============================================================
+const CHAT_API_ENDPOINT = "https://geny-ai-web-backend.vercel.app/api/chat";
+
+const IMAGE_API_BASE = "https://image.pollinations.ai/prompt/";
+const IMAGE_WIDTH = 768;
+const IMAGE_HEIGHT = 768;
+
+const STORAGE_KEY = "geny_ai_conversations_v1";
+const RAG_MAX_CHARS = 400000; // chữ tối đa lấy từ 1 tệp để nạp vào kho tài liệu
+
+const IMAGE_COMMAND_PREFIXES = ["/image ", "/img ", "/anh ", "/ảnh "];
+const IMAGE_NL_TRIGGERS = [
+  "vẽ giúp", "vẽ cho", "vẽ ảnh", "vẽ một bức", "vẽ 1 bức",
+  "tạo ảnh", "tạo hình ảnh", "tạo giúp ảnh",
+  "generate an image", "generate image", "draw a picture", "draw me",
+  "нарисуй", "создай изображение", "сгенерируй изображение",
+  "그려줘", "그려 줘", "이미지 만들어", "그림 그려",
+  "描いて", "画像を作って", "画像を生成", "絵を描いて",
+  "dessine-moi", "dessine moi", "génère une image", "crée une image",
+  "zeichne", "erstelle ein bild", "generiere ein bild",
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let conversations = loadConversations();
+let currentConvId = null;
+let chatHistory = [];
+let isTyping = false;
+
+const chatScroll = document.getElementById("chat-scroll");
+const textInput = document.getElementById("text-input");
+const sendBtn = document.getElementById("send-btn");
+const inputShell = document.getElementById("input-shell");
+const emptyState = document.getElementById("empty-state");
+const sidebar = document.getElementById("sidebar");
+const sidebarOverlay = document.getElementById("sidebar-overlay");
+const convList = document.getElementById("conv-list");
+
+// ============================================================
+// LƯU TRỮ
+// ============================================================
+function loadConversations() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) { return []; }
+}
+function saveConversations() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations)); }
+  catch (e) { console.error("Lỗi lưu lịch sử:", e); }
+}
+function makeTitle(text) {
+  const t = text.trim().replace(/\s+/g, " ");
+  return t.length <= 30 ? t : t.slice(0, 30).trimEnd() + "…";
+}
+
+// ============================================================
+// ĐA NGÔN NGỮ + CÀI ĐẶT
+// ============================================================
+const LANG_KEY = "geny_ai_lang_v1";
+const LANGS = [
+  { code: "en", name: "English" },
+  { code: "vi", name: "Tiếng Việt" },
+  { code: "ru", name: "Русский" },
+  { code: "ko", name: "한국어" },
+  { code: "ja", name: "日本語" },
+  { code: "fr", name: "Français" },
+  { code: "de", name: "Deutsch" },
+];
+const I18N = {
+ "en": {
+  "sidebar.new": "New chat",
+  "sidebar.empty": "No conversations yet",
+  "conv.default": "Conversation",
+  "sidebar.collapse": "Collapse sidebar",
+  "sidebar.open": "Open sidebar",
+  "settings.label": "Settings",
+  "settings.language": "Language",
+  "settings.langDesc": "Interface language. Geny also uses it when the language of your message is unclear.",
+  "common.close": "Close",
+  "hero.1": "Hi there,",
+  "hero.2": "How can I help?",
+  "chip.explain": "Explain a concept",
+  "chip.explain.p": "Explain a difficult concept to me",
+  "chip.email": "Write an email",
+  "chip.email.p": "Write me a professional email",
+  "chip.image": "Draw a picture",
+  "chip.image.p": "Draw me an astronaut cat",
+  "chip.study": "Plan my studying",
+  "chip.study.p": "Help me make an effective study plan",
+  "input.ph": "Message Geny…",
+  "send": "Send",
+  "plus.title": "Add files or folder",
+  "plus.files": "Attach images or files",
+  "plus.folder": "Add a whole folder",
+  "plan.normal.desc": "Fast and light. For everyday use.",
+  "plan.plus.desc": "Stronger model, deeper reasoning, fuller answers, more images and files, longer memory.",
+  "plan.title": "Unlock Plus",
+  "plan.sub": "Enter your activation code to use the Plus plan.",
+  "plan.row.model": "Model",
+  "plan.row.reasoning": "Reasoning",
+  "plan.row.length": "Answer length",
+  "plan.row.images": "Images per message",
+  "plan.row.files": "Max file length",
+  "plan.row.memory": "Memory",
+  "v.fast": "Fast",
+  "v.strong": "Strong",
+  "v.medium": "Medium",
+  "v.deep": "Deep",
+  "v.short": "Short",
+  "v.full": "Full",
+  "v.long": "Long",
+  "v.msgs6": "6 msgs",
+  "v.msgs12": "12 msgs",
+  "plan.code.ph": "Enter activation code",
+  "plan.remove": "Remove code",
+  "plan.activate": "Activate",
+  "plan.msg.enter": "Please enter a code.",
+  "plan.msg.checking": "Checking…",
+  "plan.msg.wrong": "Wrong code.",
+  "plan.msg.ok": "Plus unlocked!",
+  "plan.msg.net": "Couldn't reach the server, try again.",
+  "plan.msg.removed": "Code removed, back to the Normal plan.",
+  "drop": "Drop images or files here",
+  "att.remove": "Remove this file",
+  "att.reading": "Reading…",
+  "att.truncated": "Long part trimmed",
+  "att.ready": "Ready",
+  "toast.max": "Max {n} files per message.",
+  "toast.imgNormal": "The Normal plan sends {n} image per message. Enter a Plus code to send more.",
+  "toast.imgMax": "Max {n} images per message.",
+  "toast.tooBig": "\"{name}\" is too large (max 10 MB).",
+  "toast.readingWait": "Reading files, hold on…",
+  "toast.imgHeavy": "Images are too heavy. Send fewer or smaller images.",
+  "toast.ragFull": "Document store almost full; part of long files was skipped.",
+  "toast.ragFail": "Couldn't add the documents: {msg}",
+  "toast.noTextFiles": "No text or code files found in that folder.",
+  "toast.loadingFiles": "Adding {n} files…",
+  "msg.folderDone": "Added {n} files from \"{folder}\" to memory. Ask me anything about them.",
+  "msg.folderFail": "Couldn't add any files. Try again later.",
+  "folder.default": "folder",
+  "folder.prefix": "Folder: ",
+  "status.ingesting": "Adding files to memory…",
+  "msg.defImage": "Look at the attached image and tell me what it mainly shows.",
+  "msg.defFile": "Read the attached file and give me a short summary of its main content.",
+  "err.generic": "Error: {msg}",
+  "err.files": "Couldn't process the file/image: {msg}",
+  "err.imgGen": "Couldn't generate the image (check your connection): {msg}",
+  "err.imgLoad": "couldn't load the image",
+  "err.imgRead": "couldn't read the image",
+  "err.lib": "couldn't load the file-reading library",
+  "err.format": "unsupported format (use images, PDF, Word .docx, or text/code files)",
+  "err.noText": "couldn't extract text (scanned PDF? take a picture of it and send the image)",
+  "err.server": "Server returned error {n}",
+  "err.cutoff": "The server disconnected midway.",
+  "settings.theme": "Theme",
+  "settings.themeDesc": "Choose a light or dark look.",
+  "theme.light": "Light",
+  "theme.dark": "Dark",
+  "pv.open": "Preview",
+  "pv.view": "Preview",
+  "pv.code": "Code",
+  "pv.reload": "Reload",
+  "pv.copy": "Copy code",
+  "pv.copied": "Copied",
+  "pv.download": "Download .html",
+  "pv.close": "Close",
+  "status.thinking": "Thinking…",
+  "status.synth": "Putting it together…",
+  "status.calc": "Calculating…",
+  "status.time": "Checking the time…",
+  "status.search": "Searching the web: {arg}",
+  "status.read": "Reading page: {arg}",
+  "status.docs": "Searching your documents…",
+  "status.work": "Working on it…",
+  "status.vision": "Looking at the image…",
+  "status.shrink": "Trimming the context…",
+  "status.image": "Drawing the image…",
+  "dl.btn": "Get the Windows app",
+  "dl.title": "Geny for Windows",
+  "dl.desc": "Install the desktop app so Geny can search and install apps on your PC. Geny always asks you before running anything.",
+  "dl.go": "Download for Windows",
+  "dl.note": "Needs Windows 10 or later. Because the app isn't code-signed yet, Windows or your antivirus may show a warning on first launch. Choose More info, then Run anyway, only if you trust this download."
+ },
+ "vi": {
+  "sidebar.new": "Cuộc trò chuyện mới",
+  "sidebar.empty": "Chưa có cuộc trò chuyện nào",
+  "conv.default": "Cuộc trò chuyện",
+  "sidebar.collapse": "Thu gọn thanh bên",
+  "sidebar.open": "Mở thanh bên",
+  "settings.label": "Cài đặt",
+  "settings.language": "Ngôn ngữ",
+  "settings.langDesc": "Ngôn ngữ giao diện. Geny cũng dùng ngôn ngữ này khi không rõ bạn đang viết tiếng gì.",
+  "common.close": "Đóng",
+  "hero.1": "Chào bạn,",
+  "hero.2": "Mình giúp gì được?",
+  "chip.explain": "Giải thích một khái niệm",
+  "chip.explain.p": "Giải thích giúp mình một khái niệm khó",
+  "chip.email": "Viết email",
+  "chip.email.p": "Viết giúp mình một email chuyên nghiệp",
+  "chip.image": "Vẽ một bức ảnh",
+  "chip.image.p": "Vẽ giúp mình một chú mèo phi hành gia",
+  "chip.study": "Lên kế hoạch học tập",
+  "chip.study.p": "Giúp mình lên kế hoạch học tập hiệu quả",
+  "input.ph": "Nhắn cho Geny…",
+  "send": "Gửi",
+  "plus.title": "Thêm tệp hoặc thư mục",
+  "plus.files": "Đính kèm ảnh hoặc tệp",
+  "plus.folder": "Nạp cả thư mục",
+  "plan.normal.desc": "Nhanh, gọn. Dùng hằng ngày.",
+  "plan.plus.desc": "Model mạnh hơn, suy luận sâu, trả lời đầy đủ, nhiều ảnh và tệp, nhớ lâu hơn.",
+  "plan.title": "Mở khóa Plus",
+  "plan.sub": "Nhập mã kích hoạt để dùng gói Plus.",
+  "plan.row.model": "Model",
+  "plan.row.reasoning": "Suy luận",
+  "plan.row.length": "Độ dài trả lời",
+  "plan.row.images": "Ảnh mỗi tin",
+  "plan.row.files": "Tệp tối đa",
+  "plan.row.memory": "Trí nhớ",
+  "v.fast": "Nhanh",
+  "v.strong": "Mạnh",
+  "v.medium": "Vừa",
+  "v.deep": "Sâu",
+  "v.short": "Ngắn",
+  "v.full": "Đầy đủ",
+  "v.long": "Dài",
+  "v.msgs6": "6 tin",
+  "v.msgs12": "12 tin",
+  "plan.code.ph": "Nhập mã kích hoạt",
+  "plan.remove": "Gỡ mã",
+  "plan.activate": "Kích hoạt",
+  "plan.msg.enter": "Hãy nhập mã.",
+  "plan.msg.checking": "Đang kiểm tra…",
+  "plan.msg.wrong": "Mã không đúng.",
+  "plan.msg.ok": "Đã mở khóa Plus!",
+  "plan.msg.net": "Không kết nối được server, thử lại.",
+  "plan.msg.removed": "Đã gỡ mã, về gói Normal.",
+  "drop": "Thả ảnh hoặc tệp vào đây",
+  "att.remove": "Bỏ tệp này",
+  "att.reading": "Đang đọc…",
+  "att.truncated": "Đã cắt bớt phần dài",
+  "att.ready": "Sẵn sàng",
+  "toast.max": "Tối đa {n} tệp mỗi tin nhắn.",
+  "toast.imgNormal": "Gói Normal chỉ gửi {n} ảnh mỗi tin. Nhập mã Plus để gửi nhiều hơn.",
+  "toast.imgMax": "Tối đa {n} ảnh mỗi tin nhắn.",
+  "toast.tooBig": "\"{name}\" quá lớn (tối đa 10MB).",
+  "toast.readingWait": "Đang đọc tệp, đợi một chút…",
+  "toast.imgHeavy": "Ảnh quá nặng, hãy gửi ít ảnh hơn hoặc ảnh nhỏ hơn.",
+  "toast.ragFull": "Kho tài liệu gần đầy, một phần tệp dài đã bị bỏ qua.",
+  "toast.ragFail": "Không nạp được tài liệu: {msg}",
+  "toast.noTextFiles": "Không thấy tệp văn bản/code nào trong thư mục.",
+  "toast.loadingFiles": "Đang nạp {n} tệp…",
+  "msg.folderDone": "Đã nạp {n} tệp từ \"{folder}\" vào bộ nhớ. Giờ hỏi gì về chúng cũng được.",
+  "msg.folderFail": "Không nạp được tệp nào. Thử lại sau.",
+  "folder.default": "thư mục",
+  "folder.prefix": "Thư mục: ",
+  "status.ingesting": "Đang nạp tệp vào bộ nhớ…",
+  "msg.defImage": "Hãy xem ảnh đính kèm và cho mình biết nội dung chính.",
+  "msg.defFile": "Hãy đọc tệp đính kèm và tóm tắt ngắn gọn nội dung chính.",
+  "err.generic": "Lỗi: {msg}",
+  "err.files": "Không xử lý được tệp/ảnh: {msg}",
+  "err.imgGen": "Không tạo được ảnh (kiểm tra kết nối mạng): {msg}",
+  "err.imgLoad": "không tải được ảnh",
+  "err.imgRead": "không đọc được ảnh",
+  "err.lib": "không tải được thư viện đọc tệp",
+  "err.format": "định dạng chưa hỗ trợ (dùng ảnh, PDF, Word .docx, hoặc tệp văn bản/code)",
+  "err.noText": "không trích được chữ (PDF dạng ảnh scan? hãy chụp thành ảnh rồi gửi)",
+  "err.server": "Server trả lỗi {n}",
+  "err.cutoff": "Server ngắt kết nối giữa chừng.",
+  "settings.theme": "Giao diện",
+  "settings.themeDesc": "Chọn giao diện sáng hoặc tối.",
+  "theme.light": "Sáng",
+  "theme.dark": "Tối",
+  "pv.open": "Xem trước",
+  "pv.view": "Xem trước",
+  "pv.code": "Mã",
+  "pv.reload": "Tải lại",
+  "pv.copy": "Sao chép mã",
+  "pv.copied": "Đã sao chép",
+  "pv.download": "Tải về .html",
+  "pv.close": "Đóng",
+  "status.thinking": "Đang suy nghĩ…",
+  "status.synth": "Đang tổng hợp…",
+  "status.calc": "Đang tính toán…",
+  "status.time": "Đang xem giờ…",
+  "status.search": "Đang tìm trên web: {arg}",
+  "status.read": "Đang đọc trang: {arg}",
+  "status.docs": "Đang tra trong tài liệu…",
+  "status.work": "Đang xử lý…",
+  "status.vision": "Đang xem ảnh…",
+  "status.shrink": "Đang rút gọn ngữ cảnh…",
+  "status.image": "Đang vẽ ảnh…",
+  "dl.btn": "Tải app cho Windows",
+  "dl.title": "Geny cho Windows",
+  "dl.desc": "Cài app desktop để Geny có thể tìm và cài ứng dụng giúp bạn trên máy. Geny luôn hỏi bạn trước khi chạy bất cứ lệnh nào.",
+  "dl.go": "Tải về cho Windows",
+  "dl.note": "Cần Windows 10 trở lên. Vì app chưa có chữ ký số, Windows hoặc phần mềm diệt virus có thể cảnh báo lần đầu mở. Chỉ chọn More info rồi Run anyway nếu bạn tin file tải này."
+ },
+ "ru": {
+  "sidebar.new": "Новый чат",
+  "sidebar.empty": "Пока нет чатов",
+  "conv.default": "Чат",
+  "sidebar.collapse": "Свернуть боковую панель",
+  "sidebar.open": "Открыть боковую панель",
+  "settings.label": "Настройки",
+  "settings.language": "Язык",
+  "settings.langDesc": "Язык интерфейса. Geny также использует его, если язык вашего сообщения неясен.",
+  "common.close": "Закрыть",
+  "hero.1": "Привет!",
+  "hero.2": "Чем могу помочь?",
+  "chip.explain": "Объяснить понятие",
+  "chip.explain.p": "Объясни мне сложное понятие",
+  "chip.email": "Написать письмо",
+  "chip.email.p": "Напиши мне профессиональное письмо",
+  "chip.image": "Нарисовать картинку",
+  "chip.image.p": "Нарисуй кота-астронавта",
+  "chip.study": "План обучения",
+  "chip.study.p": "Помоги составить эффективный план обучения",
+  "input.ph": "Сообщение для Geny…",
+  "send": "Отправить",
+  "plus.title": "Добавить файлы или папку",
+  "plus.files": "Прикрепить изображения или файлы",
+  "plus.folder": "Добавить всю папку",
+  "plan.normal.desc": "Быстро и легко. Для повседневного использования.",
+  "plan.plus.desc": "Более мощная модель, глубокие рассуждения, полные ответы, больше изображений и файлов, длиннее память.",
+  "plan.title": "Разблокировать Plus",
+  "plan.sub": "Введите код активации, чтобы использовать тариф Plus.",
+  "plan.row.model": "Модель",
+  "plan.row.reasoning": "Рассуждение",
+  "plan.row.length": "Длина ответа",
+  "plan.row.images": "Изображений в сообщении",
+  "plan.row.files": "Объём файла",
+  "plan.row.memory": "Память",
+  "v.fast": "Быстрая",
+  "v.strong": "Мощная",
+  "v.medium": "Средне",
+  "v.deep": "Глубокое",
+  "v.short": "Короткий",
+  "v.full": "Полный",
+  "v.long": "Длинный",
+  "v.msgs6": "6 сообщ.",
+  "v.msgs12": "12 сообщ.",
+  "plan.code.ph": "Введите код активации",
+  "plan.remove": "Удалить код",
+  "plan.activate": "Активировать",
+  "plan.msg.enter": "Введите код.",
+  "plan.msg.checking": "Проверка…",
+  "plan.msg.wrong": "Неверный код.",
+  "plan.msg.ok": "Plus разблокирован!",
+  "plan.msg.net": "Не удалось связаться с сервером, повторите попытку.",
+  "plan.msg.removed": "Код удалён, возврат на тариф Normal.",
+  "drop": "Перетащите изображения или файлы сюда",
+  "att.remove": "Убрать файл",
+  "att.reading": "Чтение…",
+  "att.truncated": "Длинная часть обрезана",
+  "att.ready": "Готово",
+  "toast.max": "Не более {n} файлов в сообщении.",
+  "toast.imgNormal": "В тарифе Normal можно отправить {n} изображение за раз. Введите код Plus, чтобы отправлять больше.",
+  "toast.imgMax": "Не более {n} изображений в сообщении.",
+  "toast.tooBig": "«{name}» слишком большой (макс. 10 МБ).",
+  "toast.readingWait": "Читаю файлы, подождите…",
+  "toast.imgHeavy": "Изображения слишком тяжёлые. Отправьте меньше или меньшего размера.",
+  "toast.ragFull": "Хранилище почти заполнено; часть длинных файлов пропущена.",
+  "toast.ragFail": "Не удалось добавить документы: {msg}",
+  "toast.noTextFiles": "В папке не найдено текстовых файлов или кода.",
+  "toast.loadingFiles": "Добавляю файлов: {n}…",
+  "msg.folderDone": "Добавлено файлов из «{folder}»: {n}. Спрашивайте о них что угодно.",
+  "msg.folderFail": "Не удалось добавить ни одного файла. Попробуйте позже.",
+  "folder.default": "папка",
+  "folder.prefix": "Папка: ",
+  "status.ingesting": "Добавляю файлы в память…",
+  "msg.defImage": "Посмотри на прикреплённое изображение и скажи, что на нём главное.",
+  "msg.defFile": "Прочитай прикреплённый файл и кратко перескажи основное содержание.",
+  "err.generic": "Ошибка: {msg}",
+  "err.files": "Не удалось обработать файл/изображение: {msg}",
+  "err.imgGen": "Не удалось создать изображение (проверьте подключение): {msg}",
+  "err.imgLoad": "не удалось загрузить изображение",
+  "err.imgRead": "не удалось прочитать изображение",
+  "err.lib": "не удалось загрузить библиотеку чтения файлов",
+  "err.format": "формат не поддерживается (используйте изображения, PDF, Word .docx или текстовые файлы/код)",
+  "err.noText": "не удалось извлечь текст (PDF-скан? сделайте снимок и отправьте изображение)",
+  "err.server": "Сервер вернул ошибку {n}",
+  "err.cutoff": "Сервер оборвал соединение.",
+  "settings.theme": "Тема",
+  "settings.themeDesc": "Выберите светлое или тёмное оформление.",
+  "theme.light": "Светлая",
+  "theme.dark": "Тёмная",
+  "status.thinking": "Думаю…",
+  "status.synth": "Собираю ответ…",
+  "status.calc": "Считаю…",
+  "status.time": "Смотрю время…",
+  "status.search": "Ищу в интернете: {arg}",
+  "status.read": "Читаю страницу: {arg}",
+  "status.docs": "Ищу в документах…",
+  "status.work": "Обрабатываю…",
+  "status.vision": "Смотрю изображение…",
+  "status.shrink": "Сокращаю контекст…",
+  "status.image": "Рисую изображение…",
+  "dl.btn": "Скачать для Windows",
+  "dl.title": "Geny для Windows",
+  "dl.desc": "Установите приложение, чтобы Geny мог искать и устанавливать программы на вашем ПК. Geny всегда спрашивает разрешения перед запуском.",
+  "dl.go": "Скачать для Windows",
+  "dl.note": "Нужна Windows 10 или новее. Приложение пока без цифровой подписи, поэтому Windows или антивирус могут показать предупреждение при первом запуске. Выбирайте «Подробнее» и «Выполнить в любом случае», только если доверяете этому файлу."
+ },
+ "ko": {
+  "sidebar.new": "새 채팅",
+  "sidebar.empty": "아직 대화가 없습니다",
+  "conv.default": "대화",
+  "sidebar.collapse": "사이드바 접기",
+  "sidebar.open": "사이드바 열기",
+  "settings.label": "설정",
+  "settings.language": "언어",
+  "settings.langDesc": "인터페이스 언어입니다. 메시지의 언어가 불분명할 때 Geny도 이 언어를 사용합니다.",
+  "common.close": "닫기",
+  "hero.1": "안녕하세요,",
+  "hero.2": "무엇을 도와드릴까요?",
+  "chip.explain": "개념 설명",
+  "chip.explain.p": "어려운 개념을 설명해 줘",
+  "chip.email": "이메일 쓰기",
+  "chip.email.p": "전문적인 이메일을 써 줘",
+  "chip.image": "그림 그리기",
+  "chip.image.p": "우주비행사 고양이 그려줘",
+  "chip.study": "학습 계획 세우기",
+  "chip.study.p": "효율적인 학습 계획을 세우도록 도와줘",
+  "input.ph": "Geny에게 메시지 보내기…",
+  "send": "보내기",
+  "plus.title": "파일 또는 폴더 추가",
+  "plus.files": "이미지 또는 파일 첨부",
+  "plus.folder": "폴더 전체 추가",
+  "plan.normal.desc": "빠르고 가볍게. 일상용.",
+  "plan.plus.desc": "더 강력한 모델, 깊은 추론, 상세한 답변, 더 많은 이미지와 파일, 더 긴 기억.",
+  "plan.title": "Plus 잠금 해제",
+  "plan.sub": "Plus 요금제를 사용하려면 활성화 코드를 입력하세요.",
+  "plan.row.model": "모델",
+  "plan.row.reasoning": "추론",
+  "plan.row.length": "답변 길이",
+  "plan.row.images": "메시지당 이미지",
+  "plan.row.files": "파일 길이",
+  "plan.row.memory": "기억",
+  "v.fast": "빠름",
+  "v.strong": "강력",
+  "v.medium": "보통",
+  "v.deep": "깊음",
+  "v.short": "짧음",
+  "v.full": "상세",
+  "v.long": "김",
+  "v.msgs6": "6개",
+  "v.msgs12": "12개",
+  "plan.code.ph": "활성화 코드 입력",
+  "plan.remove": "코드 제거",
+  "plan.activate": "활성화",
+  "plan.msg.enter": "코드를 입력하세요.",
+  "plan.msg.checking": "확인 중…",
+  "plan.msg.wrong": "코드가 올바르지 않습니다.",
+  "plan.msg.ok": "Plus가 활성화되었습니다!",
+  "plan.msg.net": "서버에 연결할 수 없습니다. 다시 시도하세요.",
+  "plan.msg.removed": "코드를 제거했습니다. Normal 요금제로 돌아갑니다.",
+  "drop": "이미지나 파일을 여기에 놓으세요",
+  "att.remove": "이 파일 제거",
+  "att.reading": "읽는 중…",
+  "att.truncated": "긴 부분을 잘랐습니다",
+  "att.ready": "준비됨",
+  "toast.max": "메시지당 최대 {n}개 파일.",
+  "toast.imgNormal": "Normal 요금제는 메시지당 이미지 {n}장까지 보낼 수 있습니다. 더 보내려면 Plus 코드를 입력하세요.",
+  "toast.imgMax": "메시지당 이미지 최대 {n}장.",
+  "toast.tooBig": "\"{name}\" 파일이 너무 큽니다(최대 10MB).",
+  "toast.readingWait": "파일을 읽는 중입니다. 잠시만 기다려 주세요…",
+  "toast.imgHeavy": "이미지가 너무 큽니다. 더 적게 또는 더 작은 이미지를 보내세요.",
+  "toast.ragFull": "문서 저장소가 거의 찼습니다. 긴 파일의 일부는 건너뛰었습니다.",
+  "toast.ragFail": "문서를 추가하지 못했습니다: {msg}",
+  "toast.noTextFiles": "폴더에서 텍스트/코드 파일을 찾지 못했습니다.",
+  "toast.loadingFiles": "{n}개 파일 추가 중…",
+  "msg.folderDone": "\"{folder}\"에서 {n}개 파일을 메모리에 추가했습니다. 무엇이든 물어보세요.",
+  "msg.folderFail": "추가된 파일이 없습니다. 나중에 다시 시도하세요.",
+  "folder.default": "폴더",
+  "folder.prefix": "폴더: ",
+  "status.ingesting": "파일을 메모리에 추가하는 중…",
+  "msg.defImage": "첨부한 이미지를 보고 주요 내용을 알려줘.",
+  "msg.defFile": "첨부한 파일을 읽고 주요 내용을 간단히 요약해 줘.",
+  "err.generic": "오류: {msg}",
+  "err.files": "파일/이미지를 처리하지 못했습니다: {msg}",
+  "err.imgGen": "이미지를 만들지 못했습니다(네트워크 연결을 확인하세요): {msg}",
+  "err.imgLoad": "이미지를 불러오지 못했습니다",
+  "err.imgRead": "이미지를 읽을 수 없습니다",
+  "err.lib": "파일 읽기 라이브러리를 불러오지 못했습니다",
+  "err.format": "지원하지 않는 형식입니다(이미지, PDF, Word .docx 또는 텍스트/코드 파일 사용)",
+  "err.noText": "텍스트를 추출하지 못했습니다(스캔한 PDF인가요? 사진으로 찍어 이미지로 보내세요)",
+  "err.server": "서버 오류 {n}",
+  "err.cutoff": "서버 연결이 중간에 끊겼습니다.",
+  "settings.theme": "테마",
+  "settings.themeDesc": "라이트 또는 다크 화면을 선택하세요.",
+  "theme.light": "라이트",
+  "theme.dark": "다크",
+  "status.thinking": "생각하는 중…",
+  "status.synth": "답변을 정리하는 중…",
+  "status.calc": "계산하는 중…",
+  "status.time": "시간을 확인하는 중…",
+  "status.search": "웹 검색 중: {arg}",
+  "status.read": "페이지 읽는 중: {arg}",
+  "status.docs": "문서를 찾는 중…",
+  "status.work": "처리하는 중…",
+  "status.vision": "이미지를 보는 중…",
+  "status.shrink": "맥락을 줄이는 중…",
+  "status.image": "이미지를 그리는 중…",
+  "dl.btn": "Windows 앱 받기",
+  "dl.title": "Windows용 Geny",
+  "dl.desc": "데스크톱 앱을 설치하면 Geny가 PC에서 앱을 찾고 설치해 줄 수 있습니다. 실행 전에 항상 먼저 물어봅니다.",
+  "dl.go": "Windows용 다운로드",
+  "dl.note": "Windows 10 이상이 필요합니다. 아직 코드 서명이 없어 처음 실행할 때 Windows나 백신이 경고할 수 있습니다. 이 파일을 신뢰할 때만 '추가 정보' 후 '실행'을 선택하세요."
+ },
+ "ja": {
+  "sidebar.new": "新しいチャット",
+  "sidebar.empty": "まだ会話がありません",
+  "conv.default": "会話",
+  "sidebar.collapse": "サイドバーを閉じる",
+  "sidebar.open": "サイドバーを開く",
+  "settings.label": "設定",
+  "settings.language": "言語",
+  "settings.langDesc": "インターフェースの言語です。メッセージの言語が不明な場合、Genyもこの言語を使います。",
+  "common.close": "閉じる",
+  "hero.1": "こんにちは、",
+  "hero.2": "何をお手伝いしましょうか？",
+  "chip.explain": "概念を説明",
+  "chip.explain.p": "難しい概念を説明して",
+  "chip.email": "メールを書く",
+  "chip.email.p": "プロフェッショナルなメールを書いて",
+  "chip.image": "絵を描く",
+  "chip.image.p": "宇宙飛行士の猫を描いて",
+  "chip.study": "学習計画を立てる",
+  "chip.study.p": "効果的な学習計画を立てるのを手伝って",
+  "input.ph": "Genyにメッセージ…",
+  "send": "送信",
+  "plus.title": "ファイルまたはフォルダを追加",
+  "plus.files": "画像またはファイルを添付",
+  "plus.folder": "フォルダ全体を追加",
+  "plan.normal.desc": "高速で軽量。日常使い向け。",
+  "plan.plus.desc": "より強力なモデル、深い推論、充実した回答、より多くの画像とファイル、長い記憶。",
+  "plan.title": "Plusを解除",
+  "plan.sub": "Plusプランを使うにはアクティベーションコードを入力してください。",
+  "plan.row.model": "モデル",
+  "plan.row.reasoning": "推論",
+  "plan.row.length": "回答の長さ",
+  "plan.row.images": "メッセージあたりの画像",
+  "plan.row.files": "ファイルの長さ",
+  "plan.row.memory": "記憶",
+  "v.fast": "高速",
+  "v.strong": "高性能",
+  "v.medium": "標準",
+  "v.deep": "深い",
+  "v.short": "短い",
+  "v.full": "詳細",
+  "v.long": "長い",
+  "v.msgs6": "6件",
+  "v.msgs12": "12件",
+  "plan.code.ph": "アクティベーションコードを入力",
+  "plan.remove": "コードを削除",
+  "plan.activate": "有効化",
+  "plan.msg.enter": "コードを入力してください。",
+  "plan.msg.checking": "確認中…",
+  "plan.msg.wrong": "コードが正しくありません。",
+  "plan.msg.ok": "Plusを解除しました！",
+  "plan.msg.net": "サーバーに接続できません。もう一度お試しください。",
+  "plan.msg.removed": "コードを削除し、Normalプランに戻りました。",
+  "drop": "画像やファイルをここにドロップ",
+  "att.remove": "このファイルを削除",
+  "att.reading": "読み込み中…",
+  "att.truncated": "長い部分を省略しました",
+  "att.ready": "準備完了",
+  "toast.max": "1メッセージにつき最大{n}ファイルです。",
+  "toast.imgNormal": "Normalプランでは1メッセージにつき画像{n}枚までです。Plusコードを入力するとさらに送れます。",
+  "toast.imgMax": "1メッセージにつき画像は最大{n}枚です。",
+  "toast.tooBig": "「{name}」は大きすぎます(最大10MB)。",
+  "toast.readingWait": "ファイルを読み込み中です。少々お待ちください…",
+  "toast.imgHeavy": "画像が重すぎます。枚数を減らすか、小さい画像を送ってください。",
+  "toast.ragFull": "ドキュメントストアがほぼ満杯です。長いファイルの一部はスキップされました。",
+  "toast.ragFail": "ドキュメントを追加できませんでした: {msg}",
+  "toast.noTextFiles": "フォルダにテキスト/コードファイルが見つかりません。",
+  "toast.loadingFiles": "{n}個のファイルを追加中…",
+  "msg.folderDone": "「{folder}」から{n}個のファイルをメモリに追加しました。何でも聞いてください。",
+  "msg.folderFail": "ファイルを追加できませんでした。後でもう一度お試しください。",
+  "folder.default": "フォルダ",
+  "folder.prefix": "フォルダ: ",
+  "status.ingesting": "ファイルをメモリに追加中…",
+  "msg.defImage": "添付した画像を見て、主な内容を教えて。",
+  "msg.defFile": "添付ファイルを読んで、主な内容を簡潔に要約して。",
+  "err.generic": "エラー: {msg}",
+  "err.files": "ファイル/画像を処理できませんでした: {msg}",
+  "err.imgGen": "画像を生成できませんでした(接続を確認してください): {msg}",
+  "err.imgLoad": "画像を読み込めませんでした",
+  "err.imgRead": "画像を読み込めませんでした",
+  "err.lib": "ファイル読み込みライブラリを読み込めませんでした",
+  "err.format": "未対応の形式です(画像、PDF、Word .docx、テキスト/コードファイルを使用してください)",
+  "err.noText": "テキストを抽出できませんでした(スキャンPDFですか？ 写真にして画像として送ってください)",
+  "err.server": "サーバーエラー {n}",
+  "err.cutoff": "サーバーとの接続が途中で切れました。",
+  "settings.theme": "テーマ",
+  "settings.themeDesc": "ライトまたはダークの表示を選びます。",
+  "theme.light": "ライト",
+  "theme.dark": "ダーク",
+  "status.thinking": "考え中…",
+  "status.synth": "回答をまとめています…",
+  "status.calc": "計算中…",
+  "status.time": "時刻を確認中…",
+  "status.search": "ウェブ検索中: {arg}",
+  "status.read": "ページを読み込み中: {arg}",
+  "status.docs": "ドキュメントを検索中…",
+  "status.work": "処理中…",
+  "status.vision": "画像を確認中…",
+  "status.shrink": "コンテキストを短縮中…",
+  "status.image": "画像を描いています…",
+  "dl.btn": "Windows アプリを入手",
+  "dl.title": "Windows 版 Geny",
+  "dl.desc": "デスクトップアプリを入れると、GenyがPC上でアプリの検索やインストールをしてくれます。実行前には必ず確認します。",
+  "dl.go": "Windows 版をダウンロード",
+  "dl.note": "Windows 10 以降が必要です。コード署名がまだないため、初回起動時に Windows やウイルス対策ソフトが警告を出すことがあります。このファイルを信頼できる場合のみ、「詳細情報」から「実行」を選んでください。"
+ },
+ "fr": {
+  "sidebar.new": "Nouveau chat",
+  "sidebar.empty": "Aucune conversation pour l'instant",
+  "conv.default": "Conversation",
+  "sidebar.collapse": "Réduire la barre latérale",
+  "sidebar.open": "Ouvrir la barre latérale",
+  "settings.label": "Paramètres",
+  "settings.language": "Langue",
+  "settings.langDesc": "Langue de l'interface. Geny l'utilise aussi quand la langue de votre message n'est pas claire.",
+  "common.close": "Fermer",
+  "hero.1": "Bonjour,",
+  "hero.2": "Comment puis-je aider ?",
+  "chip.explain": "Expliquer un concept",
+  "chip.explain.p": "Explique-moi un concept difficile",
+  "chip.email": "Écrire un e-mail",
+  "chip.email.p": "Écris-moi un e-mail professionnel",
+  "chip.image": "Dessiner une image",
+  "chip.image.p": "Dessine-moi un chat astronaute",
+  "chip.study": "Planifier mes études",
+  "chip.study.p": "Aide-moi à établir un plan d'étude efficace",
+  "input.ph": "Écrire à Geny…",
+  "send": "Envoyer",
+  "plus.title": "Ajouter des fichiers ou un dossier",
+  "plus.files": "Joindre des images ou des fichiers",
+  "plus.folder": "Ajouter un dossier entier",
+  "plan.normal.desc": "Rapide et léger. Pour tous les jours.",
+  "plan.plus.desc": "Modèle plus puissant, raisonnement approfondi, réponses complètes, plus d'images et de fichiers, mémoire plus longue.",
+  "plan.title": "Débloquer Plus",
+  "plan.sub": "Saisissez votre code d'activation pour utiliser l'offre Plus.",
+  "plan.row.model": "Modèle",
+  "plan.row.reasoning": "Raisonnement",
+  "plan.row.length": "Longueur des réponses",
+  "plan.row.images": "Images par message",
+  "plan.row.files": "Longueur des fichiers",
+  "plan.row.memory": "Mémoire",
+  "v.fast": "Rapide",
+  "v.strong": "Puissant",
+  "v.medium": "Moyen",
+  "v.deep": "Approfondi",
+  "v.short": "Court",
+  "v.full": "Complet",
+  "v.long": "Long",
+  "v.msgs6": "6 msg",
+  "v.msgs12": "12 msg",
+  "plan.code.ph": "Saisir le code d'activation",
+  "plan.remove": "Retirer le code",
+  "plan.activate": "Activer",
+  "plan.msg.enter": "Veuillez saisir un code.",
+  "plan.msg.checking": "Vérification…",
+  "plan.msg.wrong": "Code incorrect.",
+  "plan.msg.ok": "Plus débloqué !",
+  "plan.msg.net": "Impossible de joindre le serveur, réessayez.",
+  "plan.msg.removed": "Code retiré, retour à l'offre Normal.",
+  "drop": "Déposez des images ou des fichiers ici",
+  "att.remove": "Retirer ce fichier",
+  "att.reading": "Lecture…",
+  "att.truncated": "Partie longue tronquée",
+  "att.ready": "Prêt",
+  "toast.max": "{n} fichiers maximum par message.",
+  "toast.imgNormal": "L'offre Normal envoie {n} image par message. Saisissez un code Plus pour en envoyer davantage.",
+  "toast.imgMax": "{n} images maximum par message.",
+  "toast.tooBig": "« {name} » est trop volumineux (10 Mo max).",
+  "toast.readingWait": "Lecture des fichiers, un instant…",
+  "toast.imgHeavy": "Images trop lourdes. Envoyez-en moins ou plus petites.",
+  "toast.ragFull": "Le stock de documents est presque plein ; une partie des longs fichiers a été ignorée.",
+  "toast.ragFail": "Impossible d'ajouter les documents : {msg}",
+  "toast.noTextFiles": "Aucun fichier texte ou code dans ce dossier.",
+  "toast.loadingFiles": "Ajout de {n} fichiers…",
+  "msg.folderDone": "{n} fichiers de « {folder} » ajoutés à la mémoire. Posez-moi vos questions.",
+  "msg.folderFail": "Aucun fichier n'a pu être ajouté. Réessayez plus tard.",
+  "folder.default": "dossier",
+  "folder.prefix": "Dossier : ",
+  "status.ingesting": "Ajout des fichiers à la mémoire…",
+  "msg.defImage": "Regarde l'image jointe et dis-moi ce qu'elle montre.",
+  "msg.defFile": "Lis le fichier joint et résume brièvement son contenu principal.",
+  "err.generic": "Erreur : {msg}",
+  "err.files": "Impossible de traiter le fichier/l'image : {msg}",
+  "err.imgGen": "Impossible de générer l'image (vérifiez votre connexion) : {msg}",
+  "err.imgLoad": "impossible de charger l'image",
+  "err.imgRead": "impossible de lire l'image",
+  "err.lib": "impossible de charger la bibliothèque de lecture",
+  "err.format": "format non pris en charge (utilisez des images, PDF, Word .docx ou fichiers texte/code)",
+  "err.noText": "impossible d'extraire le texte (PDF scanné ? prenez-le en photo et envoyez l'image)",
+  "err.server": "Erreur du serveur {n}",
+  "err.cutoff": "Le serveur s'est déconnecté en cours de route.",
+  "settings.theme": "Thème",
+  "settings.themeDesc": "Choisissez l'apparence claire ou sombre.",
+  "theme.light": "Clair",
+  "theme.dark": "Sombre",
+  "status.thinking": "Réflexion…",
+  "status.synth": "Rédaction de la réponse…",
+  "status.calc": "Calcul en cours…",
+  "status.time": "Vérification de l'heure…",
+  "status.search": "Recherche sur le web : {arg}",
+  "status.read": "Lecture de la page : {arg}",
+  "status.docs": "Recherche dans vos documents…",
+  "status.work": "Traitement en cours…",
+  "status.vision": "Analyse de l'image…",
+  "status.shrink": "Réduction du contexte…",
+  "status.image": "Dessin de l'image…",
+  "dl.btn": "Télécharger pour Windows",
+  "dl.title": "Geny pour Windows",
+  "dl.desc": "Installez l'application de bureau pour que Geny puisse chercher et installer des logiciels sur votre PC. Geny demande toujours votre accord avant d'exécuter quoi que ce soit.",
+  "dl.go": "Télécharger pour Windows",
+  "dl.note": "Nécessite Windows 10 ou plus récent. L'application n'étant pas encore signée, Windows ou votre antivirus peut afficher un avertissement au premier lancement. Choisissez « Informations complémentaires » puis « Exécuter quand même » uniquement si vous faites confiance à ce fichier."
+ },
+ "de": {
+  "sidebar.new": "Neuer Chat",
+  "sidebar.empty": "Noch keine Unterhaltungen",
+  "conv.default": "Unterhaltung",
+  "sidebar.collapse": "Seitenleiste einklappen",
+  "sidebar.open": "Seitenleiste öffnen",
+  "settings.label": "Einstellungen",
+  "settings.language": "Sprache",
+  "settings.langDesc": "Sprache der Oberfläche. Geny verwendet sie auch, wenn die Sprache deiner Nachricht unklar ist.",
+  "common.close": "Schließen",
+  "hero.1": "Hallo,",
+  "hero.2": "Wie kann ich helfen?",
+  "chip.explain": "Konzept erklären",
+  "chip.explain.p": "Erkläre mir ein schwieriges Konzept",
+  "chip.email": "E-Mail schreiben",
+  "chip.email.p": "Schreibe mir eine professionelle E-Mail",
+  "chip.image": "Bild zeichnen",
+  "chip.image.p": "Zeichne mir eine Astronauten-Katze",
+  "chip.study": "Lernplan erstellen",
+  "chip.study.p": "Hilf mir, einen effektiven Lernplan zu erstellen",
+  "input.ph": "Nachricht an Geny…",
+  "send": "Senden",
+  "plus.title": "Dateien oder Ordner hinzufügen",
+  "plus.files": "Bilder oder Dateien anhängen",
+  "plus.folder": "Ganzen Ordner hinzufügen",
+  "plan.normal.desc": "Schnell und leicht. Für den Alltag.",
+  "plan.plus.desc": "Stärkeres Modell, tieferes Denken, ausführlichere Antworten, mehr Bilder und Dateien, längeres Gedächtnis.",
+  "plan.title": "Plus freischalten",
+  "plan.sub": "Gib deinen Aktivierungscode ein, um den Plus-Tarif zu nutzen.",
+  "plan.row.model": "Modell",
+  "plan.row.reasoning": "Denken",
+  "plan.row.length": "Antwortlänge",
+  "plan.row.images": "Bilder pro Nachricht",
+  "plan.row.files": "Dateilänge",
+  "plan.row.memory": "Gedächtnis",
+  "v.fast": "Schnell",
+  "v.strong": "Stark",
+  "v.medium": "Mittel",
+  "v.deep": "Tief",
+  "v.short": "Kurz",
+  "v.full": "Ausführlich",
+  "v.long": "Lang",
+  "v.msgs6": "6 Nachr.",
+  "v.msgs12": "12 Nachr.",
+  "plan.code.ph": "Aktivierungscode eingeben",
+  "plan.remove": "Code entfernen",
+  "plan.activate": "Aktivieren",
+  "plan.msg.enter": "Bitte gib einen Code ein.",
+  "plan.msg.checking": "Wird geprüft…",
+  "plan.msg.wrong": "Falscher Code.",
+  "plan.msg.ok": "Plus freigeschaltet!",
+  "plan.msg.net": "Server nicht erreichbar, bitte erneut versuchen.",
+  "plan.msg.removed": "Code entfernt, zurück zum Normal-Tarif.",
+  "drop": "Bilder oder Dateien hier ablegen",
+  "att.remove": "Datei entfernen",
+  "att.reading": "Wird gelesen…",
+  "att.truncated": "Langer Teil gekürzt",
+  "att.ready": "Bereit",
+  "toast.max": "Maximal {n} Dateien pro Nachricht.",
+  "toast.imgNormal": "Der Normal-Tarif erlaubt {n} Bild pro Nachricht. Gib einen Plus-Code ein, um mehr zu senden.",
+  "toast.imgMax": "Maximal {n} Bilder pro Nachricht.",
+  "toast.tooBig": "„{name}“ ist zu groß (max. 10 MB).",
+  "toast.readingWait": "Dateien werden gelesen, einen Moment…",
+  "toast.imgHeavy": "Die Bilder sind zu groß. Sende weniger oder kleinere Bilder.",
+  "toast.ragFull": "Der Dokumentspeicher ist fast voll; ein Teil langer Dateien wurde übersprungen.",
+  "toast.ragFail": "Dokumente konnten nicht hinzugefügt werden: {msg}",
+  "toast.noTextFiles": "Keine Text- oder Code-Dateien im Ordner gefunden.",
+  "toast.loadingFiles": "{n} Dateien werden hinzugefügt…",
+  "msg.folderDone": "{n} Dateien aus „{folder}“ zum Speicher hinzugefügt. Frag mich, was du willst.",
+  "msg.folderFail": "Es konnten keine Dateien hinzugefügt werden. Versuche es später erneut.",
+  "folder.default": "Ordner",
+  "folder.prefix": "Ordner: ",
+  "status.ingesting": "Dateien werden zum Speicher hinzugefügt…",
+  "msg.defImage": "Sieh dir das angehängte Bild an und sag mir, was darauf zu sehen ist.",
+  "msg.defFile": "Lies die angehängte Datei und fasse den Hauptinhalt kurz zusammen.",
+  "err.generic": "Fehler: {msg}",
+  "err.files": "Datei/Bild konnte nicht verarbeitet werden: {msg}",
+  "err.imgGen": "Bild konnte nicht erzeugt werden (Verbindung prüfen): {msg}",
+  "err.imgLoad": "Bild konnte nicht geladen werden",
+  "err.imgRead": "Das Bild konnte nicht gelesen werden",
+  "err.lib": "Die Bibliothek zum Lesen von Dateien konnte nicht geladen werden",
+  "err.format": "Format nicht unterstützt (verwende Bilder, PDF, Word .docx oder Text-/Code-Dateien)",
+  "err.noText": "Text konnte nicht extrahiert werden (gescanntes PDF? Mach ein Foto und sende das Bild)",
+  "err.server": "Serverfehler {n}",
+  "err.cutoff": "Der Server hat die Verbindung unterbrochen.",
+  "settings.theme": "Design",
+  "settings.themeDesc": "Wähle ein helles oder dunkles Erscheinungsbild.",
+  "theme.light": "Hell",
+  "theme.dark": "Dunkel",
+  "status.thinking": "Denke nach…",
+  "status.synth": "Fasse zusammen…",
+  "status.calc": "Rechne…",
+  "status.time": "Prüfe die Uhrzeit…",
+  "status.search": "Websuche: {arg}",
+  "status.read": "Lese Seite: {arg}",
+  "status.docs": "Durchsuche deine Dokumente…",
+  "status.work": "Wird bearbeitet…",
+  "status.vision": "Sehe mir das Bild an…",
+  "status.shrink": "Kürze den Kontext…",
+  "status.image": "Zeichne das Bild…",
+  "dl.btn": "App für Windows laden",
+  "dl.title": "Geny für Windows",
+  "dl.desc": "Installiere die Desktop-App, damit Geny Programme auf deinem PC suchen und installieren kann. Geny fragt dich immer, bevor etwas ausgeführt wird.",
+  "dl.go": "Für Windows herunterladen",
+  "dl.note": "Erfordert Windows 10 oder neuer. Da die App noch nicht signiert ist, können Windows oder dein Virenschutz beim ersten Start warnen. Wähle „Weitere Informationen“ und „Trotzdem ausführen“ nur, wenn du dieser Datei vertraust."
+ }
+};
+
+let currentLang = "vi";
+try {
+  const saved = localStorage.getItem(LANG_KEY);
+  if (saved && I18N[saved]) currentLang = saved;
+  else {
+    const nav = String(navigator.language || "vi").slice(0, 2).toLowerCase();
+    if (I18N[nav]) currentLang = nav;
+  }
+} catch (e) {}
+
+function t(key, vars) {
+  const d = I18N[currentLang] || {};
+  let s = d[key] !== undefined ? d[key] : (I18N.en[key] !== undefined ? I18N.en[key] : key);
+  if (vars) for (const k in vars) s = s.split("{" + k + "}").join(String(vars[k]));
+  return s;
+}
+
+function renderHero() {
+  const l1 = emptyState.querySelector(".line1");
+  const l2 = emptyState.querySelector(".line2");
+  if (!l1 || !l2) return;
+  let i = 0;
+  const build = (text) => text.split(" ").map(w => `<span class="w" style="--i:${i++}">${escapeHtml(w)}</span>`).join(" ");
+  l1.innerHTML = build(t("hero.1"));
+  l2.innerHTML = build(t("hero.2"));
+  emptyState.querySelectorAll(".chip").forEach(c => c.style.setProperty("--i", i++));
+}
+
+function renderLangList() {
+  const box = document.getElementById("lang-list");
+  if (!box) return;
+  box.innerHTML = "";
+  LANGS.forEach(l => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "lang-opt" + (l.code === currentLang ? " sel" : "");
+    b.innerHTML = `<span>${l.name}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>`;
+    b.onclick = () => applyLang(l.code);
+    box.appendChild(b);
+  });
+}
+
+function applyLang(code) {
+  if (!I18N[code]) code = "en";
+  currentLang = code;
+  try { localStorage.setItem(LANG_KEY, code); } catch (e) {}
+  document.documentElement.lang = code;
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
+  document.querySelectorAll("[data-i18n-title]").forEach(el => {
+    const v = t(el.dataset.i18nTitle);
+    el.title = v;
+    el.setAttribute("aria-label", v);
+  });
+  document.querySelectorAll("[data-i18n-prompt]").forEach(el => { el.dataset.text = t(el.dataset.i18nPrompt); });
+  renderHero();
+  renderLangList();
+  refreshSidebar();
+}
+
+// ----- Giao diện sáng / tối -----
+const THEME_KEY = "geny_ai_theme_v1";
+let currentTheme = "dark";
+try {
+  const savedTheme = localStorage.getItem(THEME_KEY);
+  if (savedTheme === "light" || savedTheme === "dark") currentTheme = savedTheme;
+} catch (e) {}
+
+function applyTheme(theme) {
+  if (theme !== "light") theme = "dark";
+  currentTheme = theme;
+  document.documentElement.setAttribute("data-theme", theme);
+  try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute("content", theme === "light" ? "#F6F7F9" : "#0A0A0D");
+  document.querySelectorAll(".theme-opt").forEach(b => b.classList.toggle("sel", b.dataset.themeVal === theme));
+}
+document.querySelectorAll(".theme-opt").forEach(b => { b.onclick = () => applyTheme(b.dataset.themeVal); });
+
+// ----- Cửa sổ cài đặt -----
+const settingsModal = document.getElementById("settings-modal");
+function openSettings() { renderLangList(); settingsModal.classList.add("show"); }
+function closeSettings() { settingsModal.classList.remove("show"); }
+document.getElementById("settings-btn").onclick = openSettings;
+document.getElementById("settings-close").onclick = closeSettings;
+settingsModal.addEventListener("click", (e) => { if (e.target === settingsModal) closeSettings(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeSettings(); });
+
+// ============================================================
+// SIDEBAR
+// ============================================================
+function refreshSidebar() {
+  convList.innerHTML = "";
+  if (conversations.length === 0) {
+    const hint = document.createElement("div");
+    hint.className = "conv-empty-hint";
+    hint.textContent = t("sidebar.empty");
+    convList.appendChild(hint);
+    return;
+  }
+  conversations.forEach(conv => {
+    const row = document.createElement("div");
+    row.className = "conv-row" + (conv.id === currentConvId ? " active" : "");
+    const title = document.createElement("span");
+    title.className = "title";
+    title.textContent = conv.title || t("conv.default");
+    const del = document.createElement("button");
+    del.className = "del-btn";
+    del.textContent = "×";
+    del.onclick = (e) => { e.stopPropagation(); deleteConversation(conv.id); };
+    row.appendChild(title);
+    row.appendChild(del);
+    row.onclick = () => loadConversation(conv.id);
+    convList.appendChild(row);
+  });
+}
+
+function ensureConversationStarted(firstUserText) {
+  if (currentConvId !== null) return;
+  const conv = {
+    id: crypto.randomUUID(),
+    title: makeTitle(firstUserText),
+    created_at: new Date().toISOString(),
+    messages: [],
+  };
+  conversations.unshift(conv);
+  currentConvId = conv.id;
+  refreshSidebar();
+}
+
+function persistCurrentConversation() {
+  if (currentConvId === null) return;
+  const conv = conversations.find(c => c.id === currentConvId);
+  if (conv) conv.messages = chatHistory;
+  saveConversations();
+}
+
+function clearChatArea() {
+  hideEmptyState();
+  chatScroll.querySelectorAll(".msg-row").forEach(el => el.remove());
+}
+
+function startNewChat() {
+  if (isTyping) return;
+  window.genyAnalytics?.log("new_chat_started");
+  currentConvId = null;
+  chatHistory = [];
+  clearChatArea();
+  showEmptyState();
+  refreshSidebar();
+  closeSidebarMobile();
+}
+
+function loadConversation(convId) {
+  if (isTyping || convId === currentConvId) return;
+  const conv = conversations.find(c => c.id === convId);
+  if (!conv) return;
+  currentConvId = convId;
+  chatHistory = conv.messages || [];
+  clearChatArea();
+  if (chatHistory.length === 0) {
+    showEmptyState();
+  } else {
+    chatHistory.forEach(msg => {
+      if (msg.role === "user") addUserMessage(msg.content, msg.attachments);
+      else if (msg.image_path) addAiImage(msg.image_path);
+      else addAiMessage(msg.content, false);
+    });
+  }
+  refreshSidebar();
+  closeSidebarMobile();
+}
+
+function deleteConversation(convId) {
+  resetSession(convId);
+  conversations = conversations.filter(c => c.id !== convId);
+  saveConversations();
+  if (convId === currentConvId) startNewChat();
+  else refreshSidebar();
+}
+
+function showEmptyState() { emptyState.style.display = "flex"; }
+function hideEmptyState() { emptyState.style.display = "none"; }
+
+const appEl = document.getElementById("app");
+const isMobileView = () => window.innerWidth <= 860;
+document.getElementById("menu-toggle").onclick = () => {
+  if (isMobileView()) {
+    sidebar.classList.add("open");
+    sidebarOverlay.classList.add("show");
+  } else {
+    appEl.classList.remove("sb-collapsed");
+    try { localStorage.setItem("geny_sb_collapsed", "0"); } catch (e) {}
+  }
+};
+document.getElementById("sb-toggle").onclick = () => {
+  if (isMobileView()) { closeSidebarMobile(); return; }
+  appEl.classList.add("sb-collapsed");
+  try { localStorage.setItem("geny_sb_collapsed", "1"); } catch (e) {}
+};
+try { if (localStorage.getItem("geny_sb_collapsed") === "1") appEl.classList.add("sb-collapsed"); } catch (e) {}
+function closeSidebarMobile() {
+  sidebar.classList.remove("open");
+  sidebarOverlay.classList.remove("show");
+}
+sidebarOverlay.onclick = closeSidebarMobile;
+document.getElementById("new-chat-btn").onclick = startNewChat;
+
+// ============================================================
+// RENDER MARKDOWN + LATEX
+// ============================================================
+if (typeof marked !== "undefined") {
+  marked.setOptions({ breaks: true, gfm: true });
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+// Bảo vệ công thức toán khỏi bị markdown "ăn" mất dấu \ và _ trước khi parse.
+function markdownToHtml(rawText) {
+  const mathBlocks = [];
+  const protect = (m) => {
+    mathBlocks.push(m);
+    return "@@MATH" + (mathBlocks.length - 1) + "@@";
+  };
+  let text = rawText
+    .replace(/\$\$[\s\S]+?\$\$/g, protect)
+    .replace(/\\\[[\s\S]+?\\\]/g, protect)
+    .replace(/\\\([\s\S]+?\\\)/g, protect);
+
+  let html;
+  if (typeof marked !== "undefined") {
+    html = marked.parse(text);
+  } else {
+    html = "<p>" + escapeHtml(text).replace(/\n/g, "<br>") + "</p>";
+  }
+  html = html.replace(/@@MATH(\d+)@@/g, (_, i) => escapeHtml(mathBlocks[Number(i)]));
+  return (typeof DOMPurify !== "undefined") ? DOMPurify.sanitize(html) : html;
+}
+
+// Chỉ render markdown (nhanh) — dùng trong lúc đang gõ chữ.
+function renderMarkdownOnly(el, rawText) {
+  try {
+    el.innerHTML = markdownToHtml(rawText);
+    el.classList.add("rendered");
+  } catch (e) {
+    el.textContent = rawText;
+  }
+}
+
+// Render đầy đủ markdown + công thức LaTeX — dùng khi đã có đủ text.
+function renderMarkdownMath(el, rawText) {
+  try {
+    renderMarkdownOnly(el, rawText);
+    if (typeof renderMathInElement === "function") {
+      renderMathInElement(el, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "\\[", right: "\\]", display: true },
+          { left: "\\(", right: "\\)", display: false },
+        ],
+        throwOnError: false,
+      });
+    }
+  } catch (e) {
+    console.warn("Render markdown/LaTeX lỗi, giữ text thô:", e);
+  }
+}
+
+// ============================================================
+// TIN NHẮN
+// ============================================================
+function scrollToBottom() { chatScroll.scrollTop = chatScroll.scrollHeight; }
+function isNearBottom() {
+  return chatScroll.scrollHeight - chatScroll.scrollTop - chatScroll.clientHeight < 60;
+}
+function smartScroll() { if (isNearBottom()) scrollToBottom(); }
+
+function addUserMessage(text, atts) {
+  const row = document.createElement("div");
+  row.className = "msg-row user";
+  const bubble = document.createElement("div");
+  bubble.className = "bubble-user";
+  if (atts && atts.length) {
+    const box = document.createElement("div");
+    box.className = "b-atts";
+    atts.forEach(a => {
+      if (a.type === "image" && a.src) {
+        const im = document.createElement("img");
+        im.src = a.src; im.alt = a.name || "image";
+        box.appendChild(im);
+      } else {
+        const f = document.createElement("span");
+        f.className = "b-file";
+        f.textContent = (a.type === "image" ? "🖼 " : "📄 ") + (a.name || "file");
+        box.appendChild(f);
+      }
+    });
+    bubble.appendChild(box);
+  }
+  if (text) bubble.appendChild(document.createTextNode(text));
+  row.appendChild(bubble);
+  chatScroll.appendChild(row);
+  scrollToBottom();
+  return bubble;
+}
+
+function addAiMessage(text, isError) {
+  const row = document.createElement("div");
+  row.className = "msg-row ai";
+  const div = document.createElement("div");
+  div.className = "text-ai" + (isError ? " error" : "");
+  div.textContent = text;
+  row.appendChild(div);
+  chatScroll.appendChild(row);
+  smartScroll();
+  if (text && !isError) { renderMarkdownMath(div, text); if (typeof enhanceCodeBlocks === "function") enhanceCodeBlocks(div, false); }
+  return div;
+}
+
+function addAiImage(src) {
+  const row = document.createElement("div");
+  row.className = "msg-row ai";
+  const img = document.createElement("img");
+  img.className = "ai-image";
+  img.src = src;
+  row.appendChild(img);
+  chatScroll.appendChild(row);
+  scrollToBottom();
+  return img;
+}
+
+// ============================================================
+// HIỆU ỨNG GÕ CHỮ + CHẤM CHỜ
+// ============================================================
+const streamStates = new Map();
+const waitingLabels = new Set();
+
+const ORBIT = "M-20 0A20 7.5 0 1 1 20 0A20 7.5 0 1 1 -20 0";
+const ATOM_HTML =
+  '<svg class="th-atom" viewBox="-22 -22 44 44" aria-hidden="true">' +
+  '<g fill="none" stroke="#7C6FF0" stroke-width="1" opacity=".5"><ellipse rx="20" ry="7.5"/><ellipse rx="20" ry="7.5" transform="rotate(60)"/><ellipse rx="20" ry="7.5" transform="rotate(120)"/></g>' +
+  '<circle r="3" fill="#7C6FF0"/>' +
+  '<circle r="2.2" fill="#7C6FF0"><animateMotion dur="1.8s" repeatCount="indefinite" path="' + ORBIT + '"/></circle>' +
+  '<g transform="rotate(60)"><circle r="2.2" fill="#1D9E75"><animateMotion dur="2.3s" repeatCount="indefinite" path="' + ORBIT + '"/></circle></g>' +
+  '<g transform="rotate(120)"><circle r="2.2" fill="#D85A30"><animateMotion dur="2.9s" repeatCount="indefinite" path="' + ORBIT + '"/></circle></g>' +
+  '</svg>';
+
+// Hiệu ứng chờ: nguyên tử quay + dòng trạng thái (dịch theo ngôn ngữ cài đặt)
+function startWaitingDots(el) {
+  waitingLabels.add(el);
+  el.className = "text-ai waiting";
+  el.innerHTML = ATOM_HTML + '<span class="th-text"></span>';
+  const label = el.querySelector(".th-text");
+  (function tick() {
+    if (!waitingLabels.has(el)) return;
+    const s = el.dataset.status || t("status.thinking");
+    if (label.textContent !== s) label.textContent = s;
+    setTimeout(tick, 250);
+  })();
+}
+function stopWaitingDots(el) { waitingLabels.delete(el); }
+
+function streamAppend(el, content) {
+  stopWaitingDots(el);
+  el.className = "text-ai";
+  let state = streamStates.get(el);
+  if (!state) {
+    state = { target: "", displayed: 0, finished: false, ticking: false };
+    streamStates.set(el, state);
+  }
+  state.target += content;
+  if (!state.ticking) { state.ticking = true; tickTyping(el); }
+}
+
+function finalizeStream(el, state) {
+  streamStates.delete(el);
+  renderMarkdownMath(el, state.target); // render đầy đủ: in đậm, danh sách, công thức...
+  if (typeof enhanceCodeBlocks === "function") enhanceCodeBlocks(el, true);
+  smartScroll();
+}
+
+function tickTyping(el) {
+  const state = streamStates.get(el);
+  if (!state) return;
+  const backlog = state.target.length - state.displayed;
+  let step = 4;
+  if (backlog > 120) step = Math.max(step, Math.floor(backlog / 6));
+  if (state.displayed < state.target.length) {
+    state.displayed = Math.min(state.displayed + step, state.target.length);
+    // Render markdown ngay trong lúc gõ => không bao giờ thấy ký tự ** thô lâu
+    renderMarkdownOnly(el, state.target.slice(0, state.displayed));
+    smartScroll();
+    setTimeout(() => tickTyping(el), 12);
+  } else if (!state.finished) {
+    state.ticking = false;
+  } else {
+    finalizeStream(el, state);
+  }
+}
+function markStreamFinished(el) {
+  const state = streamStates.get(el);
+  if (!state) return;
+  state.finished = true;
+  if (!state.ticking && state.displayed >= state.target.length) finalizeStream(el, state);
+}
+function setAiText(el, text, isError) {
+  stopWaitingDots(el);
+  streamStates.delete(el);
+  el.className = "text-ai" + (isError ? " error" : "");
+  el.textContent = text;
+  smartScroll();
+}
+
+// ============================================================
+// TẠO ẢNH
+// ============================================================
+function extractImagePrompt(userText) {
+  const stripped = userText.trim();
+  const lower = stripped.toLowerCase();
+  for (const prefix of IMAGE_COMMAND_PREFIXES) {
+    if (lower.startsWith(prefix)) {
+      const p = stripped.slice(prefix.length).trim();
+      return p || null;
+    }
+  }
+  for (const trigger of IMAGE_NL_TRIGGERS) {
+    const idx = lower.indexOf(trigger);
+    if (idx !== -1) {
+      const remainder = stripped.slice(idx + trigger.length).replace(/^[\s:,\-–]+/, "");
+      return remainder || stripped;
+    }
+  }
+  return null;
+}
+
+function buildImageUrl(prompt) {
+  const seed = Math.floor(Math.random() * 999999);
+  return `${IMAGE_API_BASE}${encodeURIComponent(prompt)}?width=${IMAGE_WIDTH}&height=${IMAGE_HEIGHT}&nologo=true&seed=${seed}`;
+}
+
+async function startImageGeneration(prompt) {
+  window.genyAnalytics?.log("image_generated", { prompt_length: prompt.length });
+  isTyping = true;
+  sendBtn.disabled = true;
+  const placeholder = addAiMessage("", false);
+  placeholder.dataset.status = t("status.image");
+  startWaitingDots(placeholder);
+
+  try {
+    const url = buildImageUrl(prompt);
+    await preloadImage(url);
+    stopWaitingDots(placeholder);
+    placeholder.closest(".msg-row").remove();
+    addAiImage(url);
+    chatHistory.push({ role: "assistant", content: `[Ảnh AI tạo cho mô tả: ${prompt}]`, image_path: url });
+    persistCurrentConversation();
+    refreshSidebar();
+  } catch (e) {
+    setAiText(placeholder, t("err.imgGen", { msg: (e && e.message) || e }), true);
+  }
+  resetTypingState();
+}
+
+function preloadImage(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(url);
+    img.onerror = () => reject(new Error(t("err.imgLoad")));
+    img.src = url;
+  });
+}
+
+// ============================================================
+// GÓI (Normal / Plus) — kiểm tra thật ở server, đây chỉ là giao diện
+// ============================================================
+// Gói duy nhất GN1.0 (giới hạn khớp với server)
+function activePlanCode() { return ""; }
+try { localStorage.removeItem("geny_ai_plan_code_v1"); localStorage.removeItem("geny_ai_plan_sel_v1"); } catch (e) {}
+
+// ============================================================
+// ĐÍNH KÈM ẢNH / TỆP
+// ============================================================
+const MAX_ATTACHMENTS = 5;
+const MAX_IMAGES = 3;
+const MAX_FILE_BYTES = 10 * 1024 * 1024;
+const MAX_FILE_TEXT_CHARS = 30000;      // văn bản gửi cho AI trong lượt hiện tại
+const MAX_HISTORY_ATTACH_CHARS = 8000;  // phần nhớ lại cho các lượt sau
+const MAX_TOTAL_IMAGE_CHARS = 3_200_000; // giữ body < ~4MB (giới hạn Vercel 4.5MB)
+const TEXT_EXT = /\.(txt|md|markdown|csv|tsv|json|xml|html?|css|scss|js|mjs|ts|jsx|tsx|py|java|c|h|cpp|cs|go|rs|php|rb|sql|sh|bat|ya?ml|toml|ini|log|vue|swift|kt|dart|r)$/i;
+
+let attachments = []; // {id, kind:'image'|'file', name, dataUrl?, text?, truncated?, loading?}
+let attachSeq = 0;
+
+const attachStrip = document.getElementById("attach-strip");
+const fileInput = document.getElementById("file-input");
+const toastEl = document.getElementById("toast");
+let toastTimer = null;
+function toast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove("show"), 3200);
+}
+
+function loadScriptOnce(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[data-lazy="${src}"]`)) return resolve();
+    const sc = document.createElement("script");
+    sc.src = src; sc.dataset.lazy = src;
+    sc.onload = () => resolve();
+    sc.onerror = () => reject(new Error(t("err.lib")));
+    document.head.appendChild(sc);
+  });
+}
+
+// Thu nhỏ + nén ảnh về JPEG để gửi nhẹ và nhanh.
+function compressImage(file) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      let maxSide = 1600, quality = 0.85, out = "";
+      for (let i = 0; i < 6; i++) {
+        const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+        const w = Math.max(1, Math.round(img.width * scale));
+        const h = Math.max(1, Math.round(img.height * scale));
+        const canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+        out = canvas.toDataURL("image/jpeg", quality);
+        if (out.length <= 1_000_000) break;
+        maxSide = Math.round(maxSide * 0.8); quality = Math.max(0.6, quality - 0.06);
+      }
+      resolve(out);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error(t("err.imgRead"))); };
+    img.src = url;
+  });
+}
+
+async function extractPdfText(file) {
+  await loadScriptOnce("https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js");
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
+  const pdf = await pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise;
+  let text = "";
+  for (let p = 1; p <= pdf.numPages && text.length < RAG_MAX_CHARS; p++) {
+    const page = await pdf.getPage(p);
+    const content = await page.getTextContent();
+    text += content.items.map(i => i.str).join(" ") + "\n\n";
+  }
+  return text.trim();
+}
+
+async function extractDocxText(file) {
+  await loadScriptOnce("https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js");
+  const r = await mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
+  return (r.value || "").trim();
+}
+
+async function addFiles(fileList) {
+  const files = Array.from(fileList || []);
+  for (const file of files) {
+    if (attachments.length >= MAX_ATTACHMENTS) { toast(t("toast.max", { n: MAX_ATTACHMENTS })); break; }
+    const isImage = file.type.startsWith("image/");
+    if (isImage && attachments.filter(a => a.kind === "image").length >= MAX_IMAGES) {
+      toast(t("toast.imgMax", { n: MAX_IMAGES }));
+      continue;
+    }
+    if (file.size > MAX_FILE_BYTES) { toast(t("toast.tooBig", { name: file.name })); continue; }
+
+    const name = file.name || (isImage ? "image.png" : "file");
+    const item = { id: ++attachSeq, kind: isImage ? "image" : "file", name, loading: true };
+    attachments.push(item);
+    renderAttachStrip();
+
+    try {
+      if (isImage) {
+        item.dataUrl = await compressImage(file);
+      } else if (/\.pdf$/i.test(name) || file.type === "application/pdf") {
+        item.text = await extractPdfText(file);
+      } else if (/\.docx$/i.test(name)) {
+        item.text = await extractDocxText(file);
+      } else if (file.type.startsWith("text/") || TEXT_EXT.test(name) || file.type === "application/json") {
+        item.text = await file.text();
+      } else {
+        throw new Error(t("err.format"));
+      }
+      if (!isImage) {
+        if (!item.text) throw new Error(t("err.noText"));
+        item.fullText = item.text.slice(0, RAG_MAX_CHARS);
+        if (item.text.length > MAX_FILE_TEXT_CHARS) {
+          item.text = item.text.slice(0, MAX_FILE_TEXT_CHARS);
+          item.truncated = true;
+        }
+      }
+      item.loading = false;
+    } catch (e) {
+      attachments = attachments.filter(a => a.id !== item.id);
+      toast(`"${name}": ${e.message || e}`);
+    }
+    renderAttachStrip();
+  }
+}
+
+function removeAttachment(id) {
+  attachments = attachments.filter(a => a.id !== id);
+  renderAttachStrip();
+}
+
+function renderAttachStrip() {
+  attachStrip.innerHTML = "";
+  attachStrip.classList.toggle("show", attachments.length > 0);
+  attachments.forEach(a => {
+    const el = document.createElement("div");
+    el.className = "att-item" + (a.loading ? " loading" : "");
+    if (a.kind === "image" && a.dataUrl) {
+      const im = document.createElement("img");
+      im.src = a.dataUrl; im.alt = a.name;
+      el.appendChild(im);
+    } else {
+      const ico = document.createElement("div");
+      ico.className = "att-ico";
+      ico.textContent = a.kind === "image" ? "🖼" : "📄";
+      el.appendChild(ico);
+      const info = document.createElement("div");
+      const n = document.createElement("div"); n.className = "att-name"; n.textContent = a.name;
+      const m = document.createElement("div"); m.className = "att-meta";
+      m.textContent = a.loading ? t("att.reading") : (a.truncated ? t("att.truncated") : t("att.ready"));
+      info.appendChild(n); info.appendChild(m);
+      el.appendChild(info);
+    }
+    const x = document.createElement("button");
+    x.className = "att-x"; x.type = "button"; x.textContent = "×"; x.title = t("att.remove");
+    x.onclick = () => removeAttachment(a.id);
+    el.appendChild(x);
+    attachStrip.appendChild(el);
+  });
+}
+
+function buildFileContext(list) {
+  return list.filter(a => a.kind === "file" && a.text).map(a =>
+    `[Tệp đính kèm: ${a.name}${a.truncated ? " (đã cắt bớt vì quá dài)" : ""}]\n\`\`\`\n${a.text}\n\`\`\``
+  ).join("\n\n");
+}
+
+// Nội dung gửi lên server cho 1 tin trong lịch sử (gồm cả chữ của tệp đã đính kèm trước đó).
+function historyContent(m) {
+  let c = m.content;
+  if (m.role === "user") {
+    if (m.attach_text) c += "\n\n" + m.attach_text;
+    const imgs = (m.attachments || []).filter(a => a.type === "image").length;
+    if (imgs) c += `\n\n[Người dùng đã đính kèm ${imgs} ảnh ở lượt này; ảnh không còn hiển thị]`;
+  }
+  return c;
+}
+
+// Lịch sử gửi cho server: tối đa 60 tin / 100.000 ký tự, ưu tiên tin mới nhất (khớp giới hạn ở api/chat.js)
+function historyForServer() {
+  const out = [];
+  let total = 0;
+  for (let i = chatHistory.length - 1; i >= 0 && out.length < 60; i--) {
+    const c = historyContent(chatHistory[i]);
+    if (out.length && total + c.length > 100000) break;
+    total += c.length;
+    out.unshift({ role: chatHistory[i].role, content: c });
+  }
+  return out;
+}
+
+// Paste (Ctrl+V), kéo thả, nút 📎
+const plusBtn = document.getElementById("attach-btn");
+const plusMenu = document.getElementById("plus-menu");
+plusBtn.onclick = (e) => {
+  e.stopPropagation();
+  plusMenu.classList.toggle("show");
+};
+document.addEventListener("click", (e) => {
+  if (!plusMenu.contains(e.target) && !plusBtn.contains(e.target)) plusMenu.classList.remove("show");
+});
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") plusMenu.classList.remove("show"); });
+document.getElementById("opt-files").onclick = () => { plusMenu.classList.remove("show"); fileInput.click(); };
+document.getElementById("opt-folder").onclick = () => { plusMenu.classList.remove("show"); document.getElementById("folder-input").click(); };
+fileInput.addEventListener("change", () => { addFiles(fileInput.files); fileInput.value = ""; });
+
+document.addEventListener("paste", (e) => {
+  const files = Array.from(e.clipboardData?.files || []);
+  if (files.length) { e.preventDefault(); addFiles(files); }
+});
+
+const dropOverlay = document.getElementById("drop-overlay");
+let dragDepth = 0;
+const hasFiles = (e) => Array.from(e.dataTransfer?.types || []).includes("Files");
+window.addEventListener("dragenter", (e) => { if (hasFiles(e)) { dragDepth++; dropOverlay.classList.add("show"); } });
+window.addEventListener("dragleave", (e) => { if (hasFiles(e) && --dragDepth <= 0) { dragDepth = 0; dropOverlay.classList.remove("show"); } });
+window.addEventListener("dragover", (e) => { if (hasFiles(e)) e.preventDefault(); });
+window.addEventListener("drop", (e) => {
+  if (!hasFiles(e)) return;
+  e.preventDefault();
+  dragDepth = 0; dropOverlay.classList.remove("show");
+  addFiles(e.dataTransfer.files);
+});
+
+// ============================================================
+// KẾT NỐI SERVER: STREAM TRẠNG THÁI + KHO TÀI LIỆU (RAG)
+// ============================================================
+// Gọi chat ở chế độ stream: nhận trạng thái ngầm rồi nhận câu trả lời cuối.
+// Trạng thái từ server đến dạng mã (code) => dịch theo ngôn ngữ đang chọn; không có mã thì dùng chữ gốc
+function statusText(evt) {
+  if (!evt.code) return evt.text || "";
+  const key = "status." + evt.code, s = t(key, { arg: evt.arg || "" });
+  return s === key ? (evt.text || "") : s;
+}
+
+async function chatRequest(payload, onStatus) {
+  const resp = await fetch(CHAT_API_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...payload, ui_lang: currentLang, stream: true, desktop: !!window.genyDesktop }),
+  });
+  if (!resp.ok) {
+    let d = "";
+    try { d = (await resp.json()).error || ""; } catch (_) {}
+    throw new Error(d || t("err.server", { n: resp.status }));
+  }
+  const reader = resp.body.getReader();
+  const dec = new TextDecoder();
+  let buf = "", final = null;
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    let idx;
+    while ((idx = buf.indexOf("\n\n")) !== -1) {
+      const block = buf.slice(0, idx);
+      buf = buf.slice(idx + 2);
+      if (!block.startsWith("data: ")) continue;
+      let evt;
+      try { evt = JSON.parse(block.slice(6)); } catch (_) { continue; }
+      if (evt.type === "status") onStatus && onStatus(statusText(evt));
+      else if (evt.type === "final") final = evt;
+      else if (evt.type === "error") throw new Error(evt.error);
+    }
+  }
+  if (!final) throw new Error(t("err.cutoff"));
+  return final;
+}
+
+// ---- Kho tài liệu của cuộc trò chuyện (RAG) ----
+function currentConv() { return conversations.find(c => c.id === currentConvId); }
+function getIndexedFiles() { const c = currentConv(); return (c && c.indexed_files) || []; }
+function rememberIndexed(names) {
+  const c = currentConv();
+  if (!c) return;
+  c.indexed_files = [...new Set([...(c.indexed_files || []), ...names])].slice(-20);
+  saveConversations();
+}
+
+// items: [{ name, text }]. Gửi theo lô nhỏ để không vượt giới hạn body 4.5MB của Vercel.
+async function ingestToRag(items) {
+  const done = [];
+  const batches = [];
+  let cur = [], size = 0;
+  for (const it of items) {
+    if (cur.length >= 20 || (cur.length && size + it.text.length > 150000)) { batches.push(cur); cur = []; size = 0; }
+    cur.push(it); size += it.text.length;
+  }
+  if (cur.length) batches.push(cur);
+
+  for (const b of batches) {
+    try {
+      const r = await fetch(CHAT_API_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "ingest", session_id: currentConvId, plan_code: activePlanCode(), files: b }),
+      });
+      if (!r.ok) {
+        let d = "";
+        try { d = (await r.json()).error || ""; } catch (_) {}
+        throw new Error(d || t("err.server", { n: r.status }));
+      }
+      const j = await r.json();
+      done.push(...b.map(f => f.name));
+      if (j.truncated) toast(t("toast.ragFull"));
+    } catch (e) {
+      toast(t("toast.ragFail", { msg: e.message || e }));
+    }
+  }
+  if (done.length) rememberIndexed(done);
+  return done;
+}
+
+function resetSession(id) {
+  fetch(CHAT_API_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "reset_session", session_id: id }),
+  }).catch(() => {});
+}
+
+// ---- Nạp cả thư mục ----
+async function addFolder(fileList) {
+  if (isTyping) return;
+  const SKIP = /(^|\/)(node_modules|\.git|dist|build|\.next|__pycache__|venv|\.venv)\//;
+  const files = Array.from(fileList || []).filter(f =>
+    TEXT_EXT.test(f.name) && !SKIP.test(f.webkitRelativePath || "") && f.size <= 2 * 1024 * 1024
+  ).slice(0, 300);
+  if (!files.length) { toast(t("toast.noTextFiles")); return; }
+
+  const folderName = ((files[0].webkitRelativePath || "").split("/")[0]) || t("folder.default");
+  hideEmptyState();
+  ensureConversationStarted(t("folder.prefix") + folderName);
+  isTyping = true; sendBtn.disabled = true;
+  toast(t("toast.loadingFiles", { n: files.length }));
+
+  const items = [];
+  let total = 0;
+  for (const f of files) {
+    const t = await f.text();
+    if (!t.trim()) continue;
+    items.push({ name: f.webkitRelativePath || f.name, text: t.slice(0, RAG_MAX_CHARS) });
+    total += t.length;
+    if (total > RAG_MAX_CHARS * 2) break;
+  }
+  const done = await ingestToRag(items);
+  const msg = done.length
+    ? t("msg.folderDone", { n: done.length, folder: folderName })
+    : t("msg.folderFail");
+  addAiMessage(msg, false);
+  chatHistory.push({ role: "assistant", content: msg });
+  persistCurrentConversation();
+  refreshSidebar();
+  resetTypingState();
+}
+document.getElementById("folder-input").addEventListener("change", (e) => { addFolder(e.target.files); e.target.value = ""; });
+
+// ============================================================
+// GỬI TIN NHẮN
+// ============================================================
+async function sendMessage() {
+  if (isTyping) return;
+  if (attachments.some(a => a.loading)) { toast(t("toast.readingWait")); return; }
+  const hasAtt = attachments.length > 0;
+  let userText = textInput.value.trim();
+  if (!userText && !hasAtt) return;
+
+  // Lấy đính kèm ra khỏi ô nhập
+  const sentAtts = attachments;
+  attachments = [];
+  renderAttachStrip();
+  if (hasAtt) return sendWithAttachments(userText, sentAtts);
+
+  window.genyAnalytics?.log("message_sent", { length: userText.length });
+
+  textInput.value = "";
+  hideEmptyState();
+  addUserMessage(userText);
+  ensureConversationStarted(userText);
+
+  const imagePrompt = extractImagePrompt(userText);
+  if (imagePrompt) {
+    chatHistory.push({ role: "user", content: userText });
+    startImageGeneration(imagePrompt);
+    return;
+  }
+
+  isTyping = true;
+  sendBtn.disabled = true;
+  const aiEl = addAiMessage("", false);
+  startWaitingDots(aiEl);
+
+  try {
+    const sanitizedHistory = historyForServer();
+    const data = await chatRequest({
+      message: userText,
+      history: sanitizedHistory,
+      plan_code: activePlanCode(),
+      session_id: currentConvId,
+      indexed_files: getIndexedFiles(),
+    }, (t) => { aiEl.dataset.status = t; });
+    const reply = data.reply || "";
+    streamAppend(aiEl, reply);
+    markStreamFinished(aiEl);
+    chatHistory.push({ role: "user", content: userText });
+    chatHistory.push({ role: "assistant", content: reply });
+    persistCurrentConversation();
+    refreshSidebar();
+  } catch (e) {
+    setAiText(aiEl, t("err.generic", { msg: e.message || e }), true);
+  }
+  resetTypingState();
+}
+
+async function sendWithAttachments(userText, atts) {
+  const images = atts.filter(a => a.kind === "image" && a.dataUrl);
+  const hasImages = images.length > 0;
+  const fileContext = buildFileContext(atts);
+  const message = userText || (hasImages
+    ? t("msg.defImage")
+    : t("msg.defFile"));
+
+  if (images.reduce((n, a) => n + a.dataUrl.length, 0) > MAX_TOTAL_IMAGE_CHARS) {
+    toast(t("toast.imgHeavy"));
+    attachments = atts; renderAttachStrip();
+    return;
+  }
+
+  window.genyAnalytics?.log("message_sent", { length: message.length, attachments: atts.length });
+  textInput.value = "";
+  hideEmptyState();
+  addUserMessage(userText, atts.map(a => ({ type: a.kind, name: a.name, src: a.dataUrl })));
+  ensureConversationStarted(userText || atts[0].name);
+
+  isTyping = true;
+  sendBtn.disabled = true;
+  const aiEl = addAiMessage("", false);
+  startWaitingDots(aiEl);
+
+  const toIndex = atts.filter(a => a.kind === "file" && a.fullText).map(a => ({ name: a.name, text: a.fullText }));
+  if (toIndex.length) {
+    aiEl.dataset.status = t("status.ingesting");
+    await ingestToRag(toIndex);
+  }
+
+  // Lưu vào lịch sử KHÔNG kèm base64 (tránh đầy localStorage)
+  let attachText = fileContext;
+  if (attachText.length > MAX_HISTORY_ATTACH_CHARS) attachText = attachText.slice(0, MAX_HISTORY_ATTACH_CHARS) + "\n```\n[...đã cắt bớt]";
+  const histEntry = {
+    role: "user", content: message,
+    attachments: atts.map(a => ({ type: a.kind, name: a.name })),
+    ...(attachText ? { attach_text: attachText } : {}),
+  };
+
+  try {
+    const sanitizedHistory = historyForServer();
+    const data = await chatRequest({
+      message,
+      history: sanitizedHistory,
+      images: images.map(a => a.dataUrl),
+      file_context: fileContext,
+      plan_code: activePlanCode(),
+      session_id: currentConvId,
+      indexed_files: getIndexedFiles(),
+    }, (t) => { aiEl.dataset.status = t; });
+    const reply = data.reply || "";
+    streamAppend(aiEl, reply);
+    markStreamFinished(aiEl);
+    chatHistory.push(histEntry);
+    chatHistory.push({ role: "assistant", content: reply });
+    persistCurrentConversation();
+    refreshSidebar();
+  } catch (e) {
+    setAiText(aiEl, t("err.files", { msg: e.message || e }), true);
+  }
+  resetTypingState();
+}
+
+function resetTypingState() {
+  isTyping = false;
+  sendBtn.disabled = false;
+}
+
+// ============================================================
+// EVENTS
+// ============================================================
+document.querySelectorAll(".chip").forEach(chip => {
+  chip.addEventListener("click", () => {
+    textInput.value = chip.dataset.text;
+    sendMessage();
+  });
+});
+
+sendBtn.onclick = sendMessage;
+textInput.addEventListener("keydown", (e) => { if (e.key === "Enter") sendMessage(); });
+textInput.addEventListener("focus", () => inputShell.classList.add("focused"));
+textInput.addEventListener("blur", () => inputShell.classList.remove("focused"));
+
+
+// ============================================================
+// KHỞI TẠO
+// ============================================================
+applyTheme(currentTheme);
+applyLang(currentLang);
+</script>
+<script>
+(function () {
+  "use strict";
+  var canvas = document.getElementById("dot-field");
+  var host = document.getElementById("main");
+  if (!canvas || !host || !canvas.getContext) return;
+  var ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  var GAP = 24, RADIUS = 150, PUSH = 15, R0 = 1, R1 = 2.7, TAU = Math.PI * 2;
+  var BASE = [20, 24, 40], ACC = [98, 84, 236], REST = "rgba(20,24,40,0.26)";
+  var reduced = false; // hiệu ứng nhỏ, chỉ chạy khi có con trỏ: không phụ thuộc cài đặt "giảm chuyển động" của Windows
+  var root = document.documentElement;
+  var W = 0, H = 0, n = 0, raf = 0, halo = 0, inside = false, mx = -9999, my = -9999;
+  var X, Y, OX, OY, VX, VY, G, ACT;
+
+  function isLight() { return root.getAttribute("data-theme") === "light"; }
+  function kick() { if (!raf) raf = requestAnimationFrame(frame); }
+
+  function build() {
+    if (!isLight()) return;
+    W = host.clientWidth; H = host.clientHeight;
+    if (!W || !H) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var cols = Math.ceil(W / GAP) + 1, rows = Math.ceil(H / GAP) + 1;
+    n = cols * rows;
+    X = new Float32Array(n); Y = new Float32Array(n);
+    OX = new Float32Array(n); OY = new Float32Array(n);
+    VX = new Float32Array(n); VY = new Float32Array(n);
+    G = new Float32Array(n); ACT = new Int32Array(n);
+    for (var r = 0, i = 0; r < rows; r++) for (var c = 0; c < cols; c++, i++) {
+      X[i] = (c + 0.5) * GAP; Y[i] = (r + 0.5) * GAP;
+    }
+    kick();
+  }
+
+  function frame() {
+    raf = 0;
+    if (!n || !isLight()) return;
+    var i, k, busy = 0, na = 0, px, py;
+    var want = inside ? 1 : 0;
+    halo += (want - halo) * 0.12;
+    if (Math.abs(want - halo) > 0.01) busy++;
+
+    ctx.clearRect(0, 0, W, H);
+    if (halo > 0.01) {                       // quầng sáng nhẹ dưới con trỏ
+      var gr = ctx.createRadialGradient(mx, my, 0, mx, my, RADIUS * 1.5);
+      gr.addColorStop(0, "rgba(98,84,236," + (0.09 * halo).toFixed(3) + ")");
+      gr.addColorStop(1, "rgba(98,84,236,0)");
+      ctx.fillStyle = gr; ctx.fillRect(0, 0, W, H);
+    }
+
+    ctx.fillStyle = REST; ctx.beginPath();
+    var R2 = RADIUS * RADIUS;
+    for (i = 0; i < n; i++) {
+      var tx = 0, ty = 0, tg = 0;
+      if (inside) {
+        var dx = X[i] - mx, dy = Y[i] - my, d2 = dx * dx + dy * dy;
+        if (d2 < R2) {
+          var d = Math.sqrt(d2) || 0.001, f = 1 - d / RADIUS, f2 = f * f;
+          tx = dx / d * f2 * PUSH; ty = dy / d * f2 * PUSH;   // đẩy chấm ra xa con trỏ
+          tg = f * f * (3 - 2 * f);                            // độ sáng/to của chấm
+        }
+      }
+      VX[i] = (VX[i] + (tx - OX[i]) * 0.12) * 0.78;          // lò xo
+      VY[i] = (VY[i] + (ty - OY[i]) * 0.12) * 0.78;
+      OX[i] += VX[i]; OY[i] += VY[i];
+      G[i] += (tg - G[i]) * 0.16;
+      if (Math.abs(tx - OX[i]) + Math.abs(ty - OY[i]) + Math.abs(VX[i]) + Math.abs(VY[i]) + Math.abs(tg - G[i]) > 0.01) busy++;
+      if (G[i] > 0.03) { ACT[na++] = i; continue; }
+      px = X[i] + OX[i]; py = Y[i] + OY[i];
+      ctx.moveTo(px + R0, py); ctx.arc(px, py, R0, 0, TAU);
+    }
+    ctx.fill();
+
+    for (k = 0; k < na; k++) {
+      i = ACT[k]; var g = G[i];
+      ctx.fillStyle = "rgba(" + Math.round(BASE[0] + (ACC[0] - BASE[0]) * g) + "," +
+        Math.round(BASE[1] + (ACC[1] - BASE[1]) * g) + "," +
+        Math.round(BASE[2] + (ACC[2] - BASE[2]) * g) + "," + (0.26 + 0.62 * g).toFixed(3) + ")";
+      ctx.beginPath();
+      ctx.arc(X[i] + OX[i], Y[i] + OY[i], R0 + (R1 - R0) * g, 0, TAU);
+      ctx.fill();
+    }
+    if (busy) raf = requestAnimationFrame(frame);          // hết chuyển động thì tự dừng, không tốn pin
+  }
+
+  function leave() { inside = false; kick(); }
+  if (!reduced) {
+    window.addEventListener("pointermove", function (e) {
+      if (!n || !isLight()) return;
+      var r = canvas.getBoundingClientRect();
+      mx = e.clientX - r.left; my = e.clientY - r.top; inside = true; kick();
+    }, { passive: true });
+    document.addEventListener("mouseleave", leave);
+    window.addEventListener("blur", leave);
+    ["pointerup", "pointercancel"].forEach(function (ev) {
+      window.addEventListener(ev, function (e) { if (e.pointerType && e.pointerType !== "mouse") leave(); });
+    });
+  }
+
+  if (window.ResizeObserver) new ResizeObserver(build).observe(host);
+  else window.addEventListener("resize", build);
+  new MutationObserver(function () { if (isLight()) build(); }).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+  root.classList.add("dots-live");
+  build();
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  var app = document.getElementById("app");
+  var frame = document.getElementById("pv-frame");
+  var codeBox = document.getElementById("pv-code");
+  if (!app || !frame || !codeBox) return;
+  var codeEl = codeBox.querySelector("code");
+  var current = "";
+  // iframe chạy sandbox (không same-origin) nên localStorage bị chặn: thêm bản giả trong bộ nhớ để trang không lỗi
+  var SHIM = "<script>(function(){try{window.localStorage.getItem('x')}catch(e){var mk=function(){var d={};return{getItem:function(k){return k in d?d[k]:null},setItem:function(k,v){d[k]=String(v)},removeItem:function(k){delete d[k]},clear:function(){d={}},key:function(i){return Object.keys(d)[i]||null}}};try{Object.defineProperty(window,'localStorage',{value:mk(),configurable:true});Object.defineProperty(window,'sessionStorage',{value:mk(),configurable:true})}catch(_){}}})();<\/script>";
+
+  function tr(k, f) { var v = typeof t === "function" ? t(k) : k; return v === k ? f : v; }
+  function isFull(c) { return /^\s*(<!doctype html|<html[\s>])/i.test(c); }
+  function build(c) {
+    if (isFull(c) || /<html[\s>]/i.test(c)) {
+      return /<head(\s[^>]*)?>/i.test(c) ? c.replace(/<head(\s[^>]*)?>/i, function (m) { return m + SHIM; }) : c;
+    }
+    return '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+      SHIM + '<style>body{font-family:system-ui,sans-serif;margin:16px}</style></head><body>' + c + "</body></html>";
+  }
+  function setTab(n) {
+    codeBox.hidden = n !== "code";
+    frame.style.visibility = n === "code" ? "hidden" : "visible";
+    Array.prototype.forEach.call(app.querySelectorAll(".pv-tab"), function (b) { b.classList.toggle("sel", b.dataset.tab === n); });
+  }
+  function labels() {
+    var set = function (id, k, f) { var el = document.getElementById(id); if (!el) return; var v = tr(k, f); if (el.classList.contains("pv-tab")) el.textContent = v; else { el.title = v; el.setAttribute("aria-label", v); } };
+    set("pv-tab-view", "pv.view", "Preview"); set("pv-tab-code", "pv.code", "Code");
+    set("pv-reload", "pv.reload", "Reload"); set("pv-copy", "pv.copy", "Copy code");
+    set("pv-download", "pv.download", "Download .html"); set("pv-close", "pv.close", "Close");
+  }
+  function closePv() { app.classList.remove("pv-on"); frame.srcdoc = ""; }
+
+  window.openPreview = function (code) {
+    current = code; frame.srcdoc = build(code); codeEl.textContent = code;
+    labels(); setTab("view"); app.classList.add("pv-on");
+  };
+
+  // Gắn nút "Xem trước" vào các khối ```html; autoOpen: tự mở khung bên phải (chỉ máy tính)
+  window.enhanceCodeBlocks = function (el, autoOpen) {
+    var last = "";
+    Array.prototype.forEach.call(el.querySelectorAll("pre > code"), function (code) {
+      var txt = code.textContent || "";
+      var tagged = /(^|\s)language-(html|htm|xhtml)(\s|$)/.test(code.className || "");
+      if (!(isFull(txt) || (tagged && txt.trim().length > 40))) return;
+      var pre = code.parentNode;
+      if (pre.parentNode.classList && pre.parentNode.classList.contains("pv-wrap")) return;
+      var wrap = document.createElement("div"); wrap.className = "pv-wrap";
+      pre.parentNode.insertBefore(wrap, pre); wrap.appendChild(pre);
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "pv-run"; b.textContent = "▶ " + tr("pv.open", "Preview");
+      b.onclick = function () { window.openPreview(txt); };
+      wrap.appendChild(b);
+      if (isFull(txt)) last = txt;
+    });
+    if (autoOpen && last && window.innerWidth > 860) window.openPreview(last);
+  };
+
+  function copyCode() {
+    var done = function () { if (typeof toast === "function") toast(tr("pv.copied", "Copied")); };
+    var fallback = function () {
+      var ta = document.createElement("textarea"); ta.value = current; ta.style.cssText = "position:fixed;opacity:0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); done(); } catch (e) {}
+      document.body.removeChild(ta);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(current).then(done, fallback); else fallback();
+  }
+
+  document.getElementById("pv-tab-view").onclick = function () { setTab("view"); };
+  document.getElementById("pv-tab-code").onclick = function () { setTab("code"); };
+  document.getElementById("pv-reload").onclick = function () { frame.srcdoc = build(current); setTab("view"); };
+  document.getElementById("pv-copy").onclick = copyCode;
+  document.getElementById("pv-close").onclick = closePv;
+  document.getElementById("pv-download").onclick = function () {
+    var url = URL.createObjectURL(new Blob([current], { type: "text/html" }));
+    var a = document.createElement("a"); a.href = url; a.download = "geny-preview.html";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  };
+  document.addEventListener("click", function (e) {   // đổi/xóa cuộc trò chuyện thì đóng khung xem trước
+    if (e.target.closest && e.target.closest("#new-chat-btn, .conv-row")) closePv();
+  });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && app.classList.contains("pv-on")) closePv(); });
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  if (!window.genyDesktop) return;            // trên web thường: không làm gì
+  var orig = window.enhanceCodeBlocks;
+  var NAMES = { winget_search: "Tìm app", winget_list: "Liệt kê app đã cài", winget_install: "Cài đặt", winget_uninstall: "Gỡ cài đặt" };
+
+  function card(code, a) {
+    var pre = code.parentNode, box = document.createElement("div");
+    box.className = "ga-card";
+    var title = document.createElement("div"); title.className = "ga-title";
+    title.textContent = "Geny đề xuất: " + NAMES[a.action] + (a.id ? " " + a.id : a.query ? " “" + a.query + "”" : "");
+    var sub = document.createElement("div"); sub.className = "ga-sub";
+    sub.textContent = ["winget_install", "winget_uninstall"].indexOf(a.action) >= 0 ? "Sẽ hiện hộp thoại xác nhận trước khi chạy." : "Chỉ đọc thông tin, không thay đổi máy.";
+    var btn = document.createElement("button"); btn.type = "button"; btn.className = "ga-run"; btn.textContent = "▶ Chạy";
+    var out = document.createElement("div"); out.className = "ga-out";
+    btn.onclick = function () {
+      btn.disabled = true; out.textContent = "Đang chạy…";
+      window.genyDesktop.runAction(a).then(function (r) {
+        out.textContent = (r.ok ? "✓ Xong" : r.denied ? "Đã hủy" : "✗ Lỗi") + (r.output ? "\n" + r.output.slice(0, 600) : "");
+        btn.disabled = false; btn.textContent = "▶ Chạy lại";
+        var msg = "[Kết quả hành động " + a.action + (a.id ? " " + a.id : "") + (a.query ? " \"" + a.query + "\"" : "") + "] " +
+          (r.ok ? "Thành công." : r.denied ? "Người dùng đã từ chối." : "Thất bại.") + "\n" + (r.output || "").slice(-1500);
+        if (!isTyping) { textInput.value = msg; sendMessage(); }   // gửi kết quả cho Geny nói tiếp
+      }).catch(function (e) { out.textContent = "✗ " + (e && e.message || e); btn.disabled = false; });
+    };
+    [title, sub, btn, out].forEach(function (n) { box.appendChild(n); });
+    pre.parentNode.replaceChild(box, pre);
+  }
+
+  window.enhanceCodeBlocks = function (el, autoOpen) {
+    if (orig) orig(el, autoOpen);
+    Array.prototype.slice.call(el.querySelectorAll("pre > code")).forEach(function (code) {
+      if (!/(^|\s)language-geny-action(\s|$)/.test(code.className || "")) return;
+      var a; try { a = JSON.parse(code.textContent); } catch (e) { return; }
+      if (a && NAMES[a.action]) card(code, a);
+    });
+  };
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  // Dán link tải file cài (.exe) vào đây, ví dụ:
+  // "https://github.com/TEN-BAN/TEN-REPO/releases/latest/download/Geny-Setup.exe"
+  var DESKTOP_DOWNLOAD_URL = "";
+
+  var btn = document.getElementById("dl-btn"), modal = document.getElementById("dl-modal"), link = document.getElementById("dl-link");
+  if (!btn || !modal || !link) return;
+  if (!DESKTOP_DOWNLOAD_URL || window.genyDesktop || !/Windows/i.test(navigator.userAgent)) return;  // chưa có link / đã là app / không phải Windows: ẩn
+  link.href = DESKTOP_DOWNLOAD_URL;
+  btn.hidden = false;
+  var close = function () { modal.classList.remove("show"); };
+  btn.onclick = function () { modal.classList.add("show"); };
+  document.getElementById("dl-close").onclick = close;
+  modal.addEventListener("click", function (e) { if (e.target === modal) close(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
+  link.addEventListener("click", function () { if (window.genyAnalytics) window.genyAnalytics.log("desktop_download_click"); });
+})();
+</script>
+</body>
+</html>
